@@ -1,3 +1,5 @@
+// Index Module - Aastik
+
 /**
  * Smart Parking System — Landing Page Scripts
  * Navbar animation | Counter animation | Scroll animation | Dark mode toggle
@@ -472,5 +474,5 @@ document.addEventListener('DOMContentLoaded', () => {
   initNavbarAnimation();
   initCounterAnimation();
   initScrollAnimations();
-  // initDarkModeToggle();
+
 });

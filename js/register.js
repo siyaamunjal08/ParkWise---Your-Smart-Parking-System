@@ -1,3 +1,5 @@
+// Register Module - Aastik
+
 /* ============================================================
    js/register.js
    Smart Parking System — Registration Page Controller
@@ -28,10 +30,6 @@
      - Contain any storage calls (that is storage.js)
      - Use inline event handlers (never onclick="..." in HTML)
 
-   MERN MIGRATION:
-   Replace this file with a React RegisterPage component.
-   Call POST /api/auth/register via Axios instead of registerUser().
-   Use React Hook Form or Formik for validation binding.
    ============================================================ */
 
 'use strict';
