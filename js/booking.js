@@ -1,3 +1,5 @@
+// Booking Module - Siya
+
 /* ============================================================
    js/booking.js
    Smart Parking System — Booking Page Controller
@@ -35,12 +37,6 @@
      - Contain business logic or validation rules
      - Use inline event handlers (never onclick="..." in HTML)
      - Set inline CSS (classList only)
-
-   MERN MIGRATION:
-   Replace SlotStore / BookingStore calls with Axios requests.
-   GET /api/slots  →  renderSlotGrid
-   POST /api/bookings  →  form submit handler
-   This file becomes a React BookingPage component.
    ============================================================ */
 
 'use strict';
@@ -166,7 +162,6 @@ const clearAllFormErrors = () => {
 
 /**
  * Fetch parking.json and seed SlotStore if empty.
- * Mirrors MERN pattern of GET /api/slots on first load.
  * @returns {Promise<void>}
  */
 const seedSlotsIfNeeded = async () => {
