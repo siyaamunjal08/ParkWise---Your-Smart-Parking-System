@@ -1,3 +1,5 @@
+// Auth Module - Aastik
+
 /* ============================================================
    js/auth.js
    Smart Parking System — Authentication Business Logic
@@ -15,24 +17,6 @@
      - Touch the DOM directly (that is register.js / login.js)
      - Contain form event listeners (page scripts handle those)
 
-   PASSWORD HASHING NOTE:
-   A lightweight djb2-inspired hash is used for Evaluation 1.
-   localStorage is client-side and NOT secure for production.
-   MERN MIGRATION: Replace hashPassword / verifyPassword with
-   bcrypt.hash() and bcrypt.compare() calls on the Express server.
-   The register / login functions below map directly to REST routes.
-
-   ROUTE GUARDS:
-   Call requireAuth()  at the top of every protected page script
-   (dashboard, booking, history, profile).
-   Call requireGuest() at the top of register.js and login.js.
-
-   MERN MIGRATION MAP:
-     registerUser()  → POST /api/auth/register
-     loginUser()     → POST /api/auth/login
-     logoutUser()    → DELETE /api/auth/logout  (clears JWT cookie)
-     requireAuth()   → Express middleware: verifyToken
-     requireGuest()  → React Router redirect in PublicRoute wrapper
    ============================================================ */
 
 'use strict';
@@ -46,8 +30,6 @@
  * Hash a plain-text password using a deterministic djb2-style
  * polynomial rolling hash. Returns a fixed-length hex string.
  *
- * ⚠️  NOT cryptographically secure — appropriate for Evaluation 1
- *     only. Replace with bcrypt.hash() on the server in MERN phase.
  *
  * @param {string} password
  * @returns {string} hex hash string
@@ -70,7 +52,6 @@ const hashPassword = (password) => {
 
 /**
  * Verify a plain-text password against a stored hash.
- * MERN: Replace with bcrypt.compare(password, hash) on the server.
  * @param {string} password   - plain-text input from the form
  * @param {string} storedHash - hash retrieved from UserStore
  * @returns {boolean}
@@ -94,9 +75,6 @@ const verifyPassword = (password, storedHash) => {
  * Checks for duplicate email, hashes the password, persists the
  * user document, then creates a session.
  *
- * MERN: POST /api/auth/register
- *   body: { name, email, phone, password }
- *   response: { token, user }
  *
  * @param {{ name, email, phone, password }} userData
  * @returns {AuthResult}
@@ -144,9 +122,6 @@ const registerUser = (userData) => {
  * user enumeration (do not distinguish "email not found" from
  * "wrong password" in the UI).
  *
- * MERN: POST /api/auth/login
- *   body: { email, password }
- *   response: { token, user }
  *
  * @param {string} email
  * @param {string} password
@@ -183,8 +158,6 @@ const loginUser = (email, password) => {
  * Log out the current user.
  * Clears the session and redirects to the login page.
  *
- * MERN: DELETE /api/auth/logout  (server clears the JWT cookie)
- *   Then navigate('/login') in React.
  */
 const logoutUser = () => {
   SessionStore.clear();
@@ -200,7 +173,6 @@ const logoutUser = () => {
  * Get the full user document for the currently logged-in user.
  * Combines session data with the full UserStore record.
  *
- * MERN: GET /api/auth/me  (decoded from JWT in the middleware)
  *
  * @returns {Object|null} full user document, or null if not logged in
  */
@@ -230,9 +202,6 @@ const getSession = () => {
  * If the user is not authenticated, they are immediately sent to
  * the login page and the rest of the script never executes.
  *
- * MERN: Replace with an Express middleware (verifyToken) that
- *   checks the JWT cookie on every protected API route.
- *   On the React side, use a <PrivateRoute> wrapper component.
  *
  * Usage:
  *   // dashboard.js, booking.js, history.js, profile.js
@@ -248,9 +217,6 @@ const requireAuth = () => {
  * Guard a page that should only be accessible to guests
  * (not logged-in users). If the user IS logged in, send them
  * to the dashboard instead — they don't need to register/login again.
- *
- * MERN: React Router <PublicRoute> wrapper that redirects
- *   authenticated users away from /login and /register.
  *
  * Usage:
  *   // register.js, login.js

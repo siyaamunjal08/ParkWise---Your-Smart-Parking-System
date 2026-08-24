@@ -1,3 +1,5 @@
+// Login Module - Aastik
+
 /* ============================================================
    js/login.js
    Smart Parking System — Login Page Controller
@@ -36,10 +38,6 @@
      - Contain any storage calls (that is storage.js)
      - Use inline event handlers (never onclick="..." in HTML)
 
-   MERN MIGRATION:
-   Replace this file with a React LoginPage component.
-   Call POST /api/auth/login via Axios instead of loginUser().
-   Store the returned JWT token and handle 401 responses.
    ============================================================ */
 
 'use strict';
