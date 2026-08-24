@@ -1,3 +1,5 @@
+// Storage Module - Arpit
+
 /* ============================================================
 
    PURPOSE:
@@ -23,10 +25,6 @@
    - Every validator is a reusable, single-responsibility function
    - No direct DOM manipulation (that belongs in auth.js / page scripts)
 
-   MERN MIGRATION:
-   Layer 1 (Rules) can be copy-pasted directly into Express
-   middleware or a shared validation library (e.g. Joi schema).
-   Layer 2 & 3 stay client-side in React components.
    ============================================================ */
 
 'use strict';
