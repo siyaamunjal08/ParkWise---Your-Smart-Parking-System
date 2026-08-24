@@ -1,3 +1,5 @@
+// History Module - Siya
+
 /* ============================================================
    js/history.js
    Smart Parking System — Booking History Page Controller
@@ -39,11 +41,6 @@
      - Modify previously created files
      - Contain validation logic (handled in validation.js)
 
-   MERN MIGRATION:
-   Replace BookingStore.findByUser() with GET /api/bookings?userId=.
-   Replace BookingStore.cancel() with PUT /api/bookings/:id/cancel.
-   Replace BookingStore.complete() with PUT /api/bookings/:id/complete.
-   This file becomes a React HistoryPage component.
    ============================================================ */
 
 'use strict';
@@ -118,8 +115,6 @@ const debounce = (fn, delayMs) => {
  * Any booking whose calculated end-time has passed is automatically
  * marked 'completed' and its slot is released back to 'available'.
  *
- * This simulates the server-side cron job that would run in MERN.
- * MERN MIGRATION: Remove this function entirely — the server handles it.
  */
 const autoCompleteExpired = () => {
   const userId         = SessionStore.getUserId();
@@ -394,12 +389,7 @@ const renderHistoryList = () => {
     historyListEl.appendChild(createHistoryCard(booking));
   });
 
-  // ── Load More visibility ──────────────────────────────────
-//   if (totalCount > state.visibleCount) {
-//     paginationEl?.removeAttribute('hidden');
-//   } else {
-//     paginationEl?.setAttribute('hidden', '');
-//   }
+
 };
 
 
