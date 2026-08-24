@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" fill="none" aria-hidden="true">
+  <!-- Clock body -->
+  <circle cx="22" cy="27" r="15" stroke="#f1f5f9" stroke-width="2.5"/>
+  <!-- Clock hands -->
+  <line x1="22" y1="18" x2="22" y2="27" stroke="#f1f5f9" stroke-width="2.5" stroke-linecap="round"/>
+  <line x1="22" y1="27" x2="29" y2="31" stroke="#f1f5f9" stroke-width="2.5" stroke-linecap="round"/>
+  <!-- Center dot -->
+  <circle cx="22" cy="27" r="2" fill="#f1f5f9"/>
+  <!-- Live pulse indicator -->
+  <circle cx="37" cy="13" r="5" fill="#10b981"/>
+  <circle cx="37" cy="13" r="8.5" stroke="#10b981" stroke-width="1.5" stroke-opacity="0.35" fill="none"/>
+  <circle cx="37" cy="13" r="2.5" fill="white"/>
+</svg>

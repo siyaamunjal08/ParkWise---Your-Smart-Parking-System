@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Your ParkWise dashboard — view active bookings, stats, and manage your reservations.">
+  <meta name="theme-color" content="#0f172a">
+  <meta name="robots" content="noindex, nofollow">
+  <title>Dashboard | ParkWise</title>
+
+  <link rel="stylesheet" href="css/dashboard.css">
+</head>
+<body>
+
+  <!-- Header -->
+  <header>
+    <div>
+
+      <!-- Logo -->
+      <a href="dashboard.html" aria-label="ParkWise — go to dashboard">
+        <strong>ParkWise</strong>
+      </a>
+
+      <!-- App Navigation -->
+      <nav aria-label="Main navigation">
+        <ul>
+          <li><a href="dashboard.html" aria-current="page">Dashboard</a></li>
+          <li><a href="booking.html">Book a Slot</a></li>
+          <li><a href="history.html">History</a></li>
+          <!-- <li><a href="profile.html">Profile</a></li> -->
+        </ul>
+      </nav>
+
+      <!-- User info + Logout -->
+      <div class="header-user">
+        <span class="header-user__name" id="header-user-name" aria-label="Logged in user"></span>
+        <button
+          type="button"
+          class="btn-logout"
+          id="btn-logout"
+          aria-label="Logout of ParkWise"
+        >
+          Logout
+        </button>
+      </div>
+
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main id="main-content">
+    <div class="dashboard-container">
+
+      <!-- Welcome -->
+      <section aria-labelledby="welcome-heading">
+        <div class="welcome-banner">
+          <div class="welcome-banner__content">
+
+            <div class="welcome-banner__text">
+              <h1 id="welcome-heading">
+                Welcome back,
+                <span class="user-name" id="welcome-name">there</span>!
+              </h1>
+              <p>Manage your bookings and find the perfect parking slot.</p>
+              <p class="welcome-banner__meta" id="welcome-meta" aria-live="polite"></p>
+            </div>
+
+            <a href="booking.html" class="btn-primary" id="welcome-book-btn">
+              Book a Slot
+            </a>
+
+          </div>
+        </div>
+      </section>
+
+      <!-- Stats Grid -->
+      <section aria-label="Your parking statistics">
+        <div class="stats-grid" role="list">
+
+          <div class="stat-card stat-card--primary" role="listitem">
+            <p class="stat-card__label">Total Bookings</p>
+            <p
+              class="stat-card__value"
+              id="stat-total-bookings"
+              aria-live="polite"
+              aria-label="Total bookings"
+            >0</p>
+            <p class="stat-card__sub">All time</p>
+          </div>
+
+          <div class="stat-card stat-card--success" role="listitem">
+            <p class="stat-card__label">Active Now</p>
+            <p
+              class="stat-card__value"
+              id="stat-active-bookings"
+              aria-live="polite"
+              aria-label="Active bookings"
+            >0</p>
+            <p class="stat-card__sub">Currently parked</p>
+          </div>
+
+          <div class="stat-card stat-card--secondary" role="listitem">
+            <p class="stat-card__label">Available Slots</p>
+            <p
+              class="stat-card__value"
+              id="stat-available-slots"
+              aria-live="polite"
+              aria-label="Available parking slots"
+            >—</p>
+            <p class="stat-card__sub">Out of 60 total</p>
+          </div>
+
+          <div class="stat-card stat-card--warning" role="listitem">
+            <p class="stat-card__label">Total Spent</p>
+            <p
+              class="stat-card__value"
+              id="stat-total-spent"
+              aria-live="polite"
+              aria-label="Total amount spent"
+            >₹0</p>
+            <p class="stat-card__sub">Across all bookings</p>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- Active Bookings -->
+      <section aria-labelledby="active-bookings-heading">
+
+        <div class="section-header">
+          <h2 id="active-bookings-heading">Active Bookings</h2>
+          <span
+            class="section-header__count"
+            id="active-bookings-count"
+            aria-label="Number of active bookings"
+          >0</span>
+          <a href="history.html" class="btn-link">View all history →</a>
+        </div>
+
+        <!-- dashboard.js renders booking cards here.
+             aria-live="polite" announces changes to screen readers. -->
+        <div
+          id="active-bookings-list"
+          class="bookings-list"
+          aria-live="polite"
+          aria-atomic="false"
+          aria-label="Active bookings list"
+        >
+
+          <!-- Default empty state — replaced by JS when bookings exist -->
+          <div class="empty-state" id="no-bookings-msg">
+            <p class="empty-state__icon" aria-hidden="true">🅿️</p>
+            <h3 class="empty-state__title">No active bookings</h3>
+            <p>You don't have any active parking sessions right now.</p>
+            <a href="booking.html" class="btn-primary">Book a Slot</a>
+          </div>
+
+        </div>
+
+      </section>
+
+      <!-- Quick Actions -->
+      <section aria-labelledby="quick-actions-heading">
+
+        <div class="section-header">
+          <h2 id="quick-actions-heading">Quick Actions</h2>
+        </div>
+
+        <div class="quick-actions">
+
+          <a href="booking.html" class="action-card" id="action-book">
+            <div
+              class="action-card__icon action-card__icon--primary"
+              aria-hidden="true"
+            >🅿️</div>
+            <p class="action-card__title">Book a Slot</p>
+            <p class="action-card__desc">
+              Find and reserve an available parking slot using AI recommendations.
+            </p>
+          </a>
+
+          <a href="history.html" class="action-card" id="action-history">
+            <div
+              class="action-card__icon action-card__icon--secondary"
+              aria-hidden="true"
+            >📋</div>
+            <p class="action-card__title">Booking History</p>
+            <p class="action-card__desc">
+              View, search, and filter all your past and current bookings.
+            </p>
+          </a>
+
+        </div>
+
+      </section>
+
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer>
+    <div>
+      <p>&copy; 2026 ParkWise. All rights reserved.</p>
+    </div>
+  </footer>
+
+  <!-- Dependency order: storage → utils → validation → auth → page-specific -->
+  <script src="js/storage.js" defer></script>
+  <script src="js/utils.js" defer></script>
+  <script src="js/validation.js" defer></script>
+  <script src="js/auth.js" defer></script>
+  <script src="js/dashboard.js" defer></script>
+
+</body>
+</html>

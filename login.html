@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Login to your  account to book slots and manage your reservations.">
+  <meta name="theme-color" content="#0f172a">
+  <title>Login | ParkWise</title>
+
+  <link rel="stylesheet" href="css/auth.css">
+</head>
+<body>
+
+  <header>
+    <div>
+      <a href="index.html" aria-label=" System home">
+        <strong>ParkWise</strong>
+      </a>
+
+      <nav aria-label="Main navigation">
+        <ul>
+          <li><a href="index.html#features">Features</a></li>
+          <li><a href="index.html#how-it-works">How It Works</a></li>
+          <li><a href="index.html#statistics">Statistics</a></li>
+        </ul>
+      </nav>
+
+      <div>
+        <a href="login.html" aria-current="page">Login</a>
+        <a href="register.html">Register</a>
+      </div>
+    </div>
+  </header>
+
+  <main>
+
+    <section id="login" aria-labelledby="login-heading">
+      <header>
+        <h1 id="login-heading">Welcome Back</h1>
+        <p>Login to access your bookings and manage your reservations.</p>
+      </header>
+
+      <form id="login-form" action="#" method="post" aria-label="Login form" novalidate>
+
+        <div>
+          <label for="email">Email</label>
+          <input
+            type="email"
+            id="email"
+            name="email"
+            placeholder="Enter your email address"
+            autocomplete="email"
+            required
+          >
+        </div>
+
+        <div>
+          <label for="password">Password</label>
+          <input
+            type="password"
+            id="password"
+            name="password"
+            placeholder="Enter your password"
+            autocomplete="current-password"
+            required
+            minlength="8"
+            maxlength="64"
+          >
+        </div>
+
+        <div id="login-error" role="alert" aria-live="polite" hidden></div>
+
+        <div>
+          <button type="submit">Login</button>
+        </div>
+
+      </form>
+
+      <p>
+        Don't have an account?
+        <a href="register.html">Register here</a>
+      </p>
+    </section>
+
+  </main>
+
+  <footer>
+    <div>
+      <div>
+        <strong></strong>
+        <p>
+           Lot Booking &amp; Intelligent Slot Recommendation System.
+        </p>
+      </div>
+
+      <nav aria-label="Footer navigation">
+        <h3>Quick Links</h3>
+        <ul>
+          <li><a href="index.html#features">Features</a></li>
+          <li><a href="index.html#how-it-works">How It Works</a></li>
+          <li><a href="index.html#statistics">Statistics</a></li>
+          <li><a href="booking.html">Book Slot</a></li>
+        </ul>
+      </nav>
+
+      <div>
+        <h3>Account</h3>
+        <ul>
+          <li><a href="login.html" aria-current="page">Login</a></li>
+          <li><a href="register.html">Register</a></li>
+        </ul>
+      </div>
+
+      <div>
+        <h3>Contact</h3>
+        <address>
+          <p>Email: <a href="mailto:support@smartparking.com">support@smartparking.com</a></p>
+          <p>Phone: <a href="tel:+911234567890">+91 12345 67890</a></p>
+        </address>
+      </div>
+    </div>
+
+    <div>
+      <p>&copy; 2026 ParkWise. All rights reserved.</p>
+    </div>
+  </footer>
+
+  <!-- Dependency order: storage → utils → validation → auth → page-specific -->
+  <script src="js/storage.js" defer></script>
+  <script src="js/utils.js" defer></script>
+  <script src="js/validation.js" defer></script>
+  <script src="js/auth.js" defer></script>
+  <script src="js/login.js" defer></script>
+
+</body>
+</html>

@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" fill="none" aria-hidden="true">
+  <!-- History arc (nearly full circle, going counter-clockwise) -->
+  <path d="M10 24 A16 16 0 1 1 14.2 36.6"
+        stroke="#f1f5f9" stroke-width="2.5" stroke-linecap="round"/>
+  <!-- Arrow head on the arc tail (counter-clockwise indicator) -->
+  <polyline points="10,17 10,25 18,25"
+            stroke="#f1f5f9" stroke-width="2.5"
+            stroke-linecap="round" stroke-linejoin="round"/>
+  <!-- Clock hands at the center of the clock face -->
+  <line x1="26" y1="24" x2="26" y2="16"
+        stroke="#f1f5f9" stroke-width="2.5" stroke-linecap="round"/>
+  <line x1="26" y1="24" x2="33" y2="29"
+        stroke="#f1f5f9" stroke-width="2.5" stroke-linecap="round"/>
+  <!-- Center dot -->
+  <circle cx="26" cy="24" r="2" fill="#f1f5f9"/>
+</svg>

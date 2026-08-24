@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="View and manage all your ParkWise booking history — filter by status, search by slot or vehicle, and cancel active reservations.">
+  <meta name="theme-color" content="#0f172a">
+  <meta name="robots" content="noindex, nofollow">
+  <title>Booking History | ParkWise</title>
+
+  <link rel="stylesheet" href="css/history.css">
+</head>
+<body>
+
+  <!-- Header -->
+  <header>
+    <div>
+
+      <!-- Logo -->
+      <a href="dashboard.html" aria-label="Smart Parking System — go to dashboard">
+        <strong>ParkWise</strong>
+      </a>
+
+      <!-- App Navigation -->
+      <nav aria-label="Main navigation">
+        <ul>
+          <li><a href="dashboard.html">Dashboard</a></li>
+          <li><a href="booking.html">Book a Slot</a></li>
+          <li><a href="history.html" aria-current="page">History</a></li>
+          <!-- <li><a href="profile.html">Profile</a></li> -->
+        </ul>
+      </nav>
+
+      <!-- Logout -->
+      <div class="header-user">
+        <span class="header-user__name" id="header-user-name" aria-label="Logged in user"></span>
+        <button
+          type="button"
+          class="btn-logout"
+          id="btn-logout"
+          aria-label="Logout of ParkWise"
+        >
+          Logout
+        </button>
+      </div>
+
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main id="main-content">
+    <div class="history-container">
+
+      <!-- Page Title Bar -->
+      <div class="page-title-bar">
+        <div>
+          <h1>Booking History</h1>
+          <p>View, search, and manage all your parking reservations.</p>
+        </div>
+      </div>
+
+      <!--Summary Stats  -->
+      <div
+        class="history-stats"
+        role="list"
+        aria-label="Booking statistics summary"
+      >
+
+        <div class="history-stat history-stat--total" role="listitem">
+          <span class="history-stat__icon" aria-hidden="true">📋</span>
+          <div class="history-stat__body">
+            <span
+              class="history-stat__value"
+              id="stat-total"
+              aria-live="polite"
+              aria-label="Total bookings"
+            >0</span>
+            <span class="history-stat__label">Total Bookings</span>
+          </div>
+        </div>
+
+        <div class="history-stat history-stat--active" role="listitem">
+          <span class="history-stat__icon" aria-hidden="true">🅿️</span>
+          <div class="history-stat__body">
+            <span
+              class="history-stat__value"
+              id="stat-active"
+              aria-live="polite"
+              aria-label="Active bookings"
+            >0</span>
+            <span class="history-stat__label">Active</span>
+          </div>
+        </div>
+
+        <div class="history-stat history-stat--completed" role="listitem">
+          <span class="history-stat__icon" aria-hidden="true">✅</span>
+          <div class="history-stat__body">
+            <span
+              class="history-stat__value"
+              id="stat-completed"
+              aria-live="polite"
+              aria-label="Completed bookings"
+            >0</span>
+            <span class="history-stat__label">Completed</span>
+          </div>
+        </div>
+
+        <div class="history-stat history-stat--cancelled" role="listitem">
+          <span class="history-stat__icon" aria-hidden="true">❌</span>
+          <div class="history-stat__body">
+            <span
+              class="history-stat__value"
+              id="stat-cancelled"
+              aria-live="polite"
+              aria-label="Cancelled bookings"
+            >0</span>
+            <span class="history-stat__label">Cancelled</span>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Search & Sort Bar -->
+      <div
+        class="history-filters-bar"
+        role="search"
+        aria-label="Search and sort booking history"
+      >
+
+        <div class="search-wrapper">
+          <span class="search-icon" aria-hidden="true">🔍</span>
+          <input
+            type="search"
+            class="search-input"
+            id="search-input"
+            name="historySearch"
+            placeholder="Search by slot, vehicle number, zone…"
+            aria-label="Search bookings"
+            autocomplete="off"
+            maxlength="50"
+          >
+        </div>
+
+        <select
+          class="sort-select"
+          id="sort-select"
+          name="historySort"
+          aria-label="Sort bookings by"
+        >
+          <option value="newest">Newest First</option>
+          <option value="oldest">Oldest First</option>
+          <option value="cost-high">Highest Cost</option>
+          <option value="cost-low">Lowest Cost</option>
+          <option value="duration-high">Longest Duration</option>
+        </select>
+
+      </div>
+
+      <!-- Status Filter Tabs -->
+      <div class="status-tabs-wrapper">
+        <div
+          class="status-tabs"
+          role="group"
+          aria-label="Filter bookings by status"
+        >
+
+          <button
+            type="button"
+            class="status-tab status-tab--all"
+            id="tab-all"
+            aria-pressed="true"
+            data-status="all"
+          >
+            All
+            <span
+              class="status-tab__count"
+              id="tab-count-all"
+              aria-label="total bookings"
+            >0</span>
+          </button>
+
+          <button
+            type="button"
+            class="status-tab status-tab--active"
+            id="tab-active"
+            aria-pressed="false"
+            data-status="active"
+          >
+            Active
+            <span
+              class="status-tab__count"
+              id="tab-count-active"
+              aria-label="active bookings"
+            >0</span>
+          </button>
+
+          <button
+            type="button"
+            class="status-tab status-tab--completed"
+            id="tab-completed"
+            aria-pressed="false"
+            data-status="completed"
+          >
+            Completed
+            <span
+              class="status-tab__count"
+              id="tab-count-completed"
+              aria-label="completed bookings"
+            >0</span>
+          </button>
+
+          <button
+            type="button"
+            class="status-tab status-tab--cancelled"
+            id="tab-cancelled"
+            aria-pressed="false"
+            data-status="cancelled"
+          >
+            Cancelled
+            <span
+              class="status-tab__count"
+              id="tab-count-cancelled"
+              aria-label="cancelled bookings"
+            >0</span>
+          </button>
+
+        </div>
+      </div>
+
+      <!-- History List -->
+      <section aria-labelledby="history-list-heading">
+
+        <!-- Visually hidden heading for screen readers -->
+        <h2 id="history-list-heading" style="display:none">Your Booking Records</h2>
+
+        <!-- Results count line — updated by history.js -->
+        <p
+          id="results-count"
+          aria-live="polite"
+          aria-atomic="true"
+          style="font-size:0.82rem; margin-bottom:-0.75rem;"
+        ></p>
+
+        <!--
+          history.js renders .history-card elements inside this container.
+          aria-live="polite" announces card additions/removals to screen readers.
+        -->
+        <div
+          id="history-list"
+          class="history-list"
+          aria-live="polite"
+          aria-atomic="false"
+          aria-label="Booking records"
+        >
+
+          <!-- Default empty state — replaced by history.js when records exist -->
+          <div class="empty-state" id="history-empty-state">
+            <p class="empty-state__icon" aria-hidden="true">📋</p>
+            <p class="empty-state__title">No bookings yet</p>
+            <p>Your parking history will appear here once you make your first booking.</p>
+            <a href="booking.html" class="btn-primary">Book Your First Slot</a>
+          </div>
+
+        </div>
+
+      </section>
+
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer>
+    <div>
+      <p>&copy; 2026 ParkWise. All rights reserved.</p>
+    </div>
+  </footer>
+
+  <!-- Dependency order: storage → utils → validation → auth → page-specific -->
+  <script src="js/storage.js"    defer></script>
+  <script src="js/utils.js"      defer></script>
+  <script src="js/validation.js" defer></script>
+  <script src="js/auth.js"       defer></script>
+  <script src="js/history.js"    defer></script>
+
+</body>
+</html>

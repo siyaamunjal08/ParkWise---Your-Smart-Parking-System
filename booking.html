@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Book a parking slot at ParkWise Complex — filter by zone, vehicle type, and AI-recommended slots.">
+  <meta name="theme-color" content="#0f172a">
+  <meta name="robots" content="noindex, nofollow">
+  <title>Book a Slot | ParkWise</title>
+
+  <link rel="stylesheet" href="css/booking.css">
+</head>
+<body>
+
+  <!-- Header -->
+
+  <header>
+    <div>
+
+      <!-- Logo -->
+      <a href="dashboard.html" aria-label="ParkWise — go to dashboard">
+        <strong>ParkWise</strong>
+      </a>
+
+      <!-- App Navigation -->
+      <nav aria-label="Main navigation">
+        <ul>
+          <li><a href="dashboard.html">Dashboard</a></li>
+          <li><a href="booking.html" aria-current="page">Book a Slot</a></li>
+          <li><a href="history.html">History</a></li>
+          <!-- <li><a href="profile.html">Profile</a></li> -->
+        </ul>
+      </nav>
+
+      <!-- Logout -->
+      <div class="header-user">
+        <span class="header-user__name" id="header-user-name" aria-label="Logged in user"></span>
+        <button
+          type="button"
+          class="btn-logout"
+          id="btn-logout"
+          aria-label="Logout of ParkWise"
+        >
+          Logout
+        </button>
+      </div>
+
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main id="main-content">
+    <div class="booking-container">
+
+      <!-- Page Title Bar -->
+      <div class="page-title-bar">
+        <div>
+          <h1>Book a Parking Slot</h1>
+          <p>Filter by zone or vehicle type, or pick a slot directly from the map.</p>
+        </div>
+      </div>
+
+      <!-- Filters Bar -->
+      <div
+        class="booking-filters"
+        role="search"
+        aria-label="Filter parking slots"
+      >
+
+        <div class="filter-group">
+          <label for="filter-vehicle-type">Vehicle Type</label>
+          <select id="filter-vehicle-type" name="filterVehicleType">
+            <option value="all">All Types</option>
+            <option value="car">Car</option>
+            <option value="bike">Bike / 2-Wheeler</option>
+            <option value="ev">Electric Vehicle (EV)</option>
+          </select>
+        </div>
+
+        <div class="filter-group">
+          <label for="filter-zone">Zone</label>
+          <select id="filter-zone" name="filterZone">
+            <option value="all">All Zones</option>
+            <option value="A">Zone A — Premium</option>
+            <option value="B">Zone B — Standard</option>
+            <option value="C">Zone C — Economy</option>
+          </select>
+        </div>
+
+        <div class="filter-group">
+          <label for="filter-floor">Floor</label>
+          <select id="filter-floor" name="filterFloor">
+            <option value="all">All Floors</option>
+            <option value="G">Ground Floor (G)</option>
+            <option value="1">First Floor (1)</option>
+          </select>
+        </div>
+
+        <button
+          type="button"
+          class="btn-filter-apply"
+          id="btn-apply-filters"
+          aria-label="Apply selected filters to the parking map"
+        >
+          Apply Filters
+        </button>
+
+      </div>
+
+      <!-- Zone Tabs -->
+      <div
+        class="zone-tabs-wrapper"
+        role="group"
+        aria-label="Quick zone filter"
+      >
+        <span class="zone-tabs-label" aria-hidden="true">Zone:</span>
+
+        <div class="zone-tabs">
+
+          <button
+            type="button"
+            class="zone-tab zone-tab--all"
+            id="tab-all"
+            aria-pressed="true"
+            data-zone="all"
+          >
+            All
+            <span class="zone-tab-count" id="tab-count-all" aria-label="available in all zones">0</span>
+          </button>
+
+          <button
+            type="button"
+            class="zone-tab zone-tab--a"
+            id="tab-a"
+            aria-pressed="false"
+            data-zone="A"
+          >
+            <span class="zone-dot zone-dot--a" aria-hidden="true"></span>
+            Zone A
+            <span class="zone-tab-count" id="tab-count-a" aria-label="available in zone A">0</span>
+          </button>
+
+          <button
+            type="button"
+            class="zone-tab zone-tab--b"
+            id="tab-b"
+            aria-pressed="false"
+            data-zone="B"
+          >
+            <span class="zone-dot zone-dot--b" aria-hidden="true"></span>
+            Zone B
+            <span class="zone-tab-count" id="tab-count-b" aria-label="available in zone B">0</span>
+          </button>
+
+          <button
+            type="button"
+            class="zone-tab zone-tab--c"
+            id="tab-c"
+            aria-pressed="false"
+            data-zone="C"
+          >
+            <span class="zone-dot zone-dot--c" aria-hidden="true"></span>
+            Zone C
+            <span class="zone-tab-count" id="tab-count-c" aria-label="available in zone C">0</span>
+          </button>
+
+        </div>
+      </div>
+
+      <!-- AI Recommendations -->
+      <section
+        class="recommendations-section"
+        aria-labelledby="recommendations-heading"
+      >
+
+        <div class="section-header">
+          <h2 id="recommendations-heading">AI Recommendations</h2>
+          <span class="ai-badge" aria-label="Powered by AI scoring algorithm">✨ AI Powered</span>
+        </div>
+
+        <!-- booking.js populates this based on selected vehicle type + scores -->
+        <div
+          id="recommendations-grid"
+          class="recommendations-grid"
+          aria-live="polite"
+          aria-atomic="false"
+          aria-label="AI recommended parking slots"
+        >
+          <!-- Default state before vehicle type is selected -->
+          <div class="empty-state" id="recommendations-placeholder">
+            <p class="empty-state__icon" aria-hidden="true">✨</p>
+            <p class="empty-state__title">Select a vehicle type above</p>
+            <p>AI recommendations will appear based on your vehicle type and slot availability.</p>
+          </div>
+        </div>
+
+      </section>
+
+      <!-- ── Parking Map (Slot Grid) -->
+      <section
+        class="slot-section"
+        aria-labelledby="slot-map-heading"
+      >
+
+        <div class="section-header">
+          <h2 id="slot-map-heading">Parking Map</h2>
+          <span
+            class="section-header__count"
+            id="slot-count"
+            aria-live="polite"
+            aria-label="Number of available slots"
+          >Loading…</span>
+        </div>
+
+        <div class="slot-grid-wrapper">
+
+          <!-- booking.js renders slot cards inside this container -->
+          <div
+            id="slot-grid"
+            class="slot-grid"
+            role="list"
+            aria-label="Interactive parking slot map. Press Enter or Space to select a slot."
+            aria-live="polite"
+            aria-atomic="false"
+          >
+            <!-- Initial loading state — replaced by booking.js -->
+            <div class="empty-state">
+              <div class="loading-spinner" role="status" aria-label="Loading parking slots"></div>
+              <p>Loading parking map…</p>
+            </div>
+          </div>
+
+          <!-- Map Legend -->
+          <div class="slot-legend" role="list" aria-label="Parking slot status legend">
+
+            <div class="legend-item" role="listitem">
+              <span class="legend-dot legend-dot--available" aria-hidden="true"></span>
+              Available
+            </div>
+
+            <div class="legend-item" role="listitem">
+              <span class="legend-dot legend-dot--occupied" aria-hidden="true"></span>
+              Occupied
+            </div>
+
+            <div class="legend-item" role="listitem">
+              <span class="legend-dot legend-dot--reserved" aria-hidden="true"></span>
+              Reserved
+            </div>
+
+            <div class="legend-item" role="listitem">
+              <span class="legend-dot legend-dot--selected" aria-hidden="true"></span>
+              Your Selection
+            </div>
+
+          </div>
+        </div>
+
+      </section>
+
+    </div>
+  </main>
+
+  <!--  Booking Panel Overlay  -->
+  <!-- Dark overlay behind the panel; click to dismiss -->
+  <div
+    class="booking-panel-overlay"
+    id="booking-panel-overlay"
+    aria-hidden="true"
+  ></div>
+
+  <!--  Booking Confirmation Panel (Drawer) -->
+  <aside
+    class="booking-panel"
+    id="booking-panel"
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="booking-panel-title"
+    aria-hidden="true"
+  >
+
+    <!-- Panel Header (sticky) -->
+    <div class="booking-panel__header">
+      <h2 class="booking-panel__title" id="booking-panel-title">Confirm Booking</h2>
+      <button
+        type="button"
+        class="btn-close-panel"
+        id="btn-close-panel"
+        aria-label="Close booking panel"
+      >✕</button>
+    </div>
+
+    <!-- Panel Body -->
+    <div class="booking-panel__body">
+
+      <!-- Selected Slot Summary — populated by booking.js -->
+      <div class="panel-slot-summary" id="panel-slot-summary" aria-live="polite">
+        <p class="panel-slot-summary__id"     id="panel-slot-id">—</p>
+        <p class="panel-slot-summary__zone"   id="panel-slot-zone">—</p>
+        <div class="panel-slot-summary__details" id="panel-slot-details"></div>
+        <p class="panel-slot-summary__price"  id="panel-slot-price">—</p>
+        <div class="panel-slot-features"      id="panel-slot-features"></div>
+      </div>
+
+      <!-- Booking Form -->
+      <form
+        id="booking-form"
+        class="booking-form"
+        aria-label="Parking booking form"
+        novalidate
+      >
+
+        <div class="form-group">
+          <label for="vehicle-type">Vehicle Type</label>
+          <select
+            id="vehicle-type"
+            name="vehicleType"
+            required
+            aria-describedby="vehicle-type-error"
+            aria-required="true"
+          >
+            <option value="">Select vehicle type</option>
+            <option value="car">Car</option>
+            <option value="bike">Bike / 2-Wheeler</option>
+            <option value="ev">Electric Vehicle (EV)</option>
+          </select>
+          <p
+            class="form-error"
+            id="vehicle-type-error"
+            role="alert"
+            aria-live="polite"
+            hidden
+          ></p>
+        </div>
+
+        <div class="form-group">
+          <label for="vehicle-number">Vehicle Number</label>
+          <input
+            type="text"
+            id="vehicle-number"
+            name="vehicleNumber"
+            placeholder="e.g. MH12AB1234"
+            autocomplete="off"
+            required
+            maxlength="15"
+            aria-describedby="vehicle-number-error"
+            aria-required="true"
+          >
+          <p
+            class="form-error"
+            id="vehicle-number-error"
+            role="alert"
+            aria-live="polite"
+            hidden
+          ></p>
+        </div>
+
+        <div class="form-group">
+          <label for="duration-hours">Duration</label>
+          <select
+            id="duration-hours"
+            name="durationHours"
+            required
+            aria-describedby="duration-error"
+            aria-required="true"
+          >
+            <option value="">Select duration</option>
+            <option value="1">1 hour</option>
+            <option value="2">2 hours</option>
+            <option value="3">3 hours</option>
+            <option value="4">4 hours</option>
+            <option value="6">6 hours</option>
+            <option value="8">8 hours</option>
+            <option value="12">12 hours</option>
+            <option value="24">24 hours (Full Day)</option>
+          </select>
+          <p
+            class="form-error"
+            id="duration-error"
+            role="alert"
+            aria-live="polite"
+            hidden
+          ></p>
+        </div>
+
+        <!-- Live Price Calculator -->
+        <div
+          class="price-calculator"
+          id="price-calculator"
+          aria-live="polite"
+          aria-label="Estimated total cost"
+        >
+          <div>
+            <p class="price-calculator__label">Estimated Total</p>
+            <p class="price-calculator__breakdown" id="price-breakdown">
+              Select duration to calculate
+            </p>
+          </div>
+          <p class="price-calculator__total" id="price-total">₹0</p>
+        </div>
+
+      </form>
+
+      <!-- Panel Action Buttons -->
+      <div class="panel-actions">
+
+
+        <button
+          type="submit"
+          form="booking-form"
+          class="btn-primary"
+          id="btn-confirm-booking"
+          aria-label="Confirm this parking slot booking"
+        >
+          Confirm Booking
+        </button>
+
+        <button
+          type="button"
+          class="btn-secondary"
+          id="btn-cancel-panel"
+          aria-label="Cancel and close the booking panel"
+        >
+          Cancel
+        </button>
+
+      </div>
+
+    </div>
+  </aside>
+
+  <!-- Footer -->
+  <footer>
+    <div>
+      <p>&copy; 2026 ParkWise. All rights reserved.</p>
+    </div>
+  </footer>
+
+  <!-- Dependency order: storage → utils → validation → auth → page-specific -->
+  <script src="js/storage.js"    defer></script>
+  <script src="js/utils.js"      defer></script>
+  <script src="js/validation.js" defer></script>
+  <script src="js/auth.js"       defer></script>
+  <script src="js/booking.js"    defer></script>
+
+</body>
+</html>

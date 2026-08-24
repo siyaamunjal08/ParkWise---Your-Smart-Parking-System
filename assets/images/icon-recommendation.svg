@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" fill="none" aria-hidden="true">
+  <!-- Large central 4-point sparkle -->
+  <path d="M24 4 C24.6 16 28 19.4 44 20 C28 20.6 24.6 24 24 44 C23.4 24 20 20.6 4 20 C20 19.4 23.4 16 24 4 Z"
+        fill="#f1f5f9" fill-opacity="0.92"/>
+  <!-- Top-right small sparkle -->
+  <path d="M39 7 C39.3 11.5 40.8 13 45 13.3 C40.8 13.6 39.3 15.1 39 20 C38.7 15.1 37.2 13.6 33 13.3 C37.2 13 38.7 11.5 39 7 Z"
+        fill="#f1f5f9" fill-opacity="0.55"/>
+  <!-- Bottom-left small sparkle -->
+  <path d="M11 30 C11.2 33.5 12.2 34.5 16 34.8 C12.2 35.1 11.2 36.1 11 40 C10.8 36.1 9.8 35.1 6 34.8 C9.8 34.5 10.8 33.5 11 30 Z"
+        fill="#f1f5f9" fill-opacity="0.45"/>
+</svg>
