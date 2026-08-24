@@ -1,3 +1,5 @@
+// Dashboard Module - Siya
+
 /* ============================================================
    js/dashboard.js
    Smart Parking System — Dashboard Page Controller
@@ -31,11 +33,7 @@
      - Use inline event handlers (no onclick in HTML)
      - Set inline CSS (classList only)
 
-   MERN MIGRATION:
-   Replace fetch('data/parking.json') with GET /api/slots.
-   Replace BookingStore calls with Axios GET /api/bookings?userId=.
-   Replace SlotStore calls with Axios PUT /api/slots/:id/release.
-   This file becomes a React Dashboard component.
+
    ============================================================ */
 
 'use strict';
@@ -77,7 +75,6 @@ const getFirstName = (fullName) => {
 
 /**
  * Fetch parking.json and seed the SlotStore if it is empty.
- * Uses fetch() — mirrors the MERN approach of GET /api/slots.
  * Seeding is idempotent: SlotStore.seed() skips if already seeded.
  * @returns {Promise<void>}
  */
