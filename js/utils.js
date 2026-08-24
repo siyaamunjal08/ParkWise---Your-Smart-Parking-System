@@ -1,3 +1,5 @@
+// Storage Module - Arpit
+
 /* ============================================================
    js/utils.js
    Smart Parking System — Shared Utility Functions
@@ -18,10 +20,6 @@
    - Pure ES6 — const, arrow functions, template literals
    - Every function is independently reusable
 
-   MERN MIGRATION:
-   DOM, Format, Calculate, String, Toast groups need no changes.
-   Navigate.redirectTo() stays the same (React Router replaces
-   it only inside components, not in utility logic).
    ============================================================ */
 
 'use strict';
@@ -295,7 +293,6 @@ const calculateEndTime = (startIso, durationHours) => {
  *   Price        → 20 pts  (lower price = more points)
  *   Features     → 10 pts  (bonus for covered / ev-charging)
  *
- * MERN: Move this to the Express recommendation controller.
  * @param {Object} slot        - slot document from SlotStore
  * @param {string} vehicleType - "car" | "bike" | "ev"
  * @returns {number} score 0–100
@@ -342,7 +339,6 @@ const isBookingExpired = (booking) => {
 
 /**
  * Redirect the browser to another page.
- * MERN: React Router's navigate() replaces this in components.
  * @param {string} path - relative path e.g. "login.html"
  */
 const redirectTo = (path) => {

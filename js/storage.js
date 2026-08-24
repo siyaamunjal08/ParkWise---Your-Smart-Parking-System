@@ -1,3 +1,5 @@
+// Storage Module - Arpit
+
 /* ============================================================
    js/storage.js
    Smart Parking System — Storage Adapter (Mock MongoDB Layer)
@@ -5,12 +7,6 @@
    PURPOSE:
    Abstracts all localStorage / sessionStorage access behind a
    clean API that mirrors MongoDB collection operations.
-
-   MERN MIGRATION:
-   When moving to Phase 2 (Node + Express + MongoDB), replace
-   each method body with the equivalent fetch() call shown in
-   the JSDoc comments. The method signatures stay identical —
-   no other file needs to change.
 
    COLLECTIONS:
    - sps_users     → registered user documents
@@ -35,8 +31,6 @@ const SESSION_KEY = 'sps_session';
 // ─── ID Generator ─────────────────────────────────────────────
 /**
  * Generates a unique document ID.
- * Format mirrors a MongoDB ObjectId in uniqueness guarantee.
- * MERN: MongoDB will auto-generate _id — remove this function.
  * @returns {string}
  */
 const generateId = () => {
@@ -55,7 +49,6 @@ const StorageService = (() => {
 
   /**
    * Read all documents from a collection.
-   * MERN: GET /api/:collection
    * @param {string} collection
    * @returns {Array}
    */
@@ -86,7 +79,6 @@ const StorageService = (() => {
 
   /**
    * Find documents matching every key/value pair in the filter.
-   * MERN: GET /api/:collection?key=value&key=value
    * @param {string} collection
    * @param {Object} filter
    * @returns {Array}
@@ -102,7 +94,6 @@ const StorageService = (() => {
 
   /**
    * Find the first document matching the filter.
-   * MERN: GET /api/:collection?key=value (take index 0)
    * @param {string} collection
    * @param {Object} filter
    * @returns {Object|null}
@@ -113,7 +104,6 @@ const StorageService = (() => {
 
   /**
    * Find a document by its _id field.
-   * MERN: GET /api/:collection/:id
    * @param {string} collection
    * @param {string} id
    * @returns {Object|null}
@@ -124,7 +114,6 @@ const StorageService = (() => {
 
   /**
    * Insert a new document. Auto-attaches _id and timestamps.
-   * MERN: POST /api/:collection  (body: doc)
    * @param {string} collection
    * @param {Object} doc
    * @returns {Object} the saved document with _id
@@ -145,7 +134,6 @@ const StorageService = (() => {
 
   /**
    * Update a document by _id. Merges fields — never overwrites _id.
-   * MERN: PUT /api/:collection/:id  (body: updates)
    * @param {string} collection
    * @param {string} id
    * @param {Object} updates
@@ -170,7 +158,6 @@ const StorageService = (() => {
 
   /**
    * Delete a document by its _id.
-   * MERN: DELETE /api/:collection/:id
    * @param {string} collection
    * @param {string} id
    * @returns {boolean} true if deleted, false if not found
@@ -185,7 +172,6 @@ const StorageService = (() => {
 
   /**
    * Count documents matching an optional filter.
-   * MERN: GET /api/:collection/count?key=value
    * @param {string} collection
    * @param {Object} filter
    * @returns {number}
@@ -196,7 +182,6 @@ const StorageService = (() => {
 
   /**
    * Drop all documents from a collection.
-   * MERN: DELETE /api/:collection  (admin only)
    * @param {string} collection
    */
   const drop = (collection) => {
@@ -240,7 +225,6 @@ const UserStore = Object.freeze({
 
   /**
    * Save a new user to the users collection.
-   * MERN: POST /api/auth/register
    * @param {{ name, email, phone, passwordHash }} userData
    * @returns {Object} saved user document
    */
@@ -254,7 +238,6 @@ const UserStore = Object.freeze({
 
   /**
    * Find a user by email address.
-   * MERN: GET /api/users?email=value
    * @param {string} email
    * @returns {Object|null}
    */
@@ -267,7 +250,6 @@ const UserStore = Object.freeze({
 
   /**
    * Find a user by their _id.
-   * MERN: GET /api/users/:id
    * @param {string} id
    * @returns {Object|null}
    */
@@ -277,7 +259,6 @@ const UserStore = Object.freeze({
 
   /**
    * Update a user's profile fields.
-   * MERN: PUT /api/users/:id
    * @param {string} id
    * @param {Object} updates
    * @returns {Object|null}
@@ -324,7 +305,6 @@ const BookingStore = Object.freeze({
 
   /**
    * Create a new booking record.
-   * MERN: POST /api/bookings
    * @param {Object} bookingData
    * @returns {Object} saved booking document
    */
@@ -337,7 +317,6 @@ const BookingStore = Object.freeze({
 
   /**
    * Get all bookings for a specific user, newest first.
-   * MERN: GET /api/bookings?userId=value
    * @param {string} userId
    * @returns {Array}
    */
@@ -348,7 +327,6 @@ const BookingStore = Object.freeze({
 
   /**
    * Find a booking by its _id.
-   * MERN: GET /api/bookings/:id
    * @param {string} id
    * @returns {Object|null}
    */
@@ -358,7 +336,6 @@ const BookingStore = Object.freeze({
 
   /**
    * Get the active booking occupying a specific slot (if any).
-   * MERN: GET /api/bookings?slotId=value&status=active
    * @param {string} slotId
    * @returns {Object|null}
    */
@@ -371,7 +348,6 @@ const BookingStore = Object.freeze({
 
   /**
    * Get all active bookings for a user.
-   * MERN: GET /api/bookings?userId=value&status=active
    * @param {string} userId
    * @returns {Array}
    */
@@ -384,7 +360,6 @@ const BookingStore = Object.freeze({
 
   /**
    * Cancel a booking by its _id.
-   * MERN: PUT /api/bookings/:id/cancel
    * @param {string} id
    * @returns {Object|null} updated booking
    */
@@ -397,7 +372,6 @@ const BookingStore = Object.freeze({
 
   /**
    * Mark a booking as completed.
-   * MERN: PUT /api/bookings/:id/complete
    * @param {string} id
    * @returns {Object|null} updated booking
    */
@@ -449,7 +423,6 @@ const SlotStore = Object.freeze({
   /**
    * Seed the slots collection from parking.json data.
    * Only runs if the collection is empty (first-time load).
-   * MERN: Seeding is done server-side — remove this method.
    * @param {Array} slotsData - the "slots" array from parking.json
    */
   seed: (slotsData) => {
@@ -464,7 +437,6 @@ const SlotStore = Object.freeze({
 
   /**
    * Get all slots.
-   * MERN: GET /api/slots
    * @returns {Array}
    */
   getAll: () => {
@@ -473,7 +445,6 @@ const SlotStore = Object.freeze({
 
   /**
    * Get all slots in a specific zone.
-   * MERN: GET /api/slots?zone=A
    * @param {string} zone - "A" | "B" | "C"
    * @returns {Array}
    */
@@ -483,7 +454,6 @@ const SlotStore = Object.freeze({
 
   /**
    * Get a slot by its id ("A-01", "B-05", etc.).
-   * MERN: GET /api/slots/:id
    * @param {string} id
    * @returns {Object|null}
    */
@@ -493,7 +463,6 @@ const SlotStore = Object.freeze({
 
   /**
    * Get all currently available slots.
-   * MERN: GET /api/slots?status=available
    * @returns {Array}
    */
   getAvailable: () => {
@@ -502,7 +471,6 @@ const SlotStore = Object.freeze({
 
   /**
    * Get available slots filtered by type.
-   * MERN: GET /api/slots?status=available&type=car
    * @param {string} type - "car" | "bike" | "ev"
    * @returns {Array}
    */
@@ -515,7 +483,6 @@ const SlotStore = Object.freeze({
 
   /**
    * Mark a slot as occupied when a booking is confirmed.
-   * MERN: PUT /api/slots/:id  (body: { status: "occupied" })
    * @param {string} id
    * @returns {Object|null}
    */
@@ -527,7 +494,6 @@ const SlotStore = Object.freeze({
 
   /**
    * Release a slot back to available when a booking is cancelled/completed.
-   * MERN: PUT /api/slots/:id  (body: { status: "available" })
    * @param {string} id
    * @returns {Object|null}
    */
@@ -556,7 +522,6 @@ const SlotStore = Object.freeze({
 /**
  * Manages the current user's login session via sessionStorage.
  * sessionStorage is tab-scoped — session auto-clears on tab close.
- * MERN: Replace with JWT stored in an httpOnly cookie.
  *
  * Session shape:
  * {
@@ -570,7 +535,6 @@ const SessionStore = Object.freeze({
 
   /**
    * Persist a user session after successful login.
-   * MERN: Server sets an httpOnly JWT cookie — remove this.
    * @param {{ _id, name, email }} user
    */
   save: (user) => {
@@ -585,7 +549,7 @@ const SessionStore = Object.freeze({
 
   /**
    * Read the current session object.
-   * MERN: Decode the JWT from the cookie server-side.
+
    * @returns {Object|null}
    */
   get: () => {
@@ -623,7 +587,6 @@ const SessionStore = Object.freeze({
 
   /**
    * Clear the session (logout).
-   * MERN: Call DELETE /api/auth/logout to clear the cookie.
    */
   clear: () => {
     sessionStorage.removeItem(SESSION_KEY);
