@@ -14,11 +14,6 @@
      5. String     — capitalise, vehicle number normalisation
      6. Toast      — in-page notification messages
 
-   RULES:
-   - No inline CSS (classList only, never element.style)
-   - No inline JS (never called from HTML attributes)
-   - Pure ES6 — const, arrow functions, template literals
-   - Every function is independently reusable
 
    ============================================================ */
 
