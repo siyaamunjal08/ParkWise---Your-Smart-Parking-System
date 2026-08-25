@@ -213,15 +213,7 @@ const requireAuth = () => {
   }
 };
 
-/**
- * Guard a page that should only be accessible to guests
- * (not logged-in users). If the user IS logged in, send them
- * to the dashboard instead — they don't need to register/login again.
- *
- * Usage:
- *   // register.js, login.js
- *   requireGuest();
- */
+
 const requireGuest = () => {
   if (SessionStore.isLoggedIn()) {
     redirectTo('dashboard.html');
