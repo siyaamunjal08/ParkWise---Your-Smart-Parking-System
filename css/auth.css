@@ -35,6 +35,11 @@
   --auth-form-max: 480px;
 }
 
+html,
+body {
+    overscroll-behavior-y: none;
+}
+
 /* ---------- Reset & Base ---------- */
 *,
 *::before,
