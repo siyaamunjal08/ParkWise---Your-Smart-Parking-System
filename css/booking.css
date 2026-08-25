@@ -80,6 +80,11 @@
 }
 
 
+html,
+body {
+    overscroll-behavior-y: none;
+}
+
 /* 2. Reset & Base  */
 *,
 *::before,
