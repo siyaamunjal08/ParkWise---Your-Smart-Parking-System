@@ -2,6 +2,11 @@
 */ 
 
 
+html,
+body {
+    overscroll-behavior-y: none;
+}
+
 :root {
   --color-primary: #6366f1;
   --color-primary-dark: #4f46e5;
