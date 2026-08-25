@@ -41,6 +41,11 @@
   --section-padding: clamp(4rem, 8vw, 7rem);
 }
 
+html,
+body {
+    overscroll-behavior-y: none;
+}
+
 /* ---------- Reset & Base ---------- */
 
 html,
