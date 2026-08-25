@@ -42,6 +42,12 @@
 }
 
 /* ---------- Reset & Base ---------- */
+
+html,
+body {
+    overscroll-behavior-y: none;
+}
+
 *,
 *::before,
 *::after {
