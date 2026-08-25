@@ -1,4 +1,4 @@
-// Storage Module - Arpit
+// Validation Module - Arpit
 
 /* ============================================================
 
@@ -19,11 +19,7 @@
        Calls all relevant field validators and collects errors.
        Returns { valid: boolean, errors: { fieldName: message } }.
 
-   RULES FOLLOWED:
-   - No inline CSS, no inline JS
-   - Pure ES6 — const, arrow functions, regex literals
-   - Every validator is a reusable, single-responsibility function
-   - No direct DOM manipulation (that belongs in auth.js / page scripts)
+
 
    ============================================================ */
 

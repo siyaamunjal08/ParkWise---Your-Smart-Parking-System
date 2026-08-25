@@ -1,4 +1,4 @@
-// Storage Module - Arpit
+// Utils Module - Arpit
 
 /* ============================================================
    js/utils.js
@@ -472,7 +472,7 @@ const showToast = (message, type = 'info', duration = 3500) => {
   toast.setAttribute('role', 'status');
   toast.textContent = message;
 
-  container.appendChild(toast);
+  container.appendChild(toast); 5
 
   // Trigger enter animation via class (CSS handles the transition)
   requestAnimationFrame(() => {
