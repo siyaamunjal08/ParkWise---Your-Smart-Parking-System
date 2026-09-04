@@ -2,13 +2,12 @@
 
 /**
  * Smart Parking System — Landing Page Scripts
- * Navbar animation | Counter animation | Scroll animation | Dark mode toggle
+ * Navbar animation | Counter animation | Scroll animation
  */
 
 'use strict';
 
 /* ---------- Constants ---------- */
-// const THEME_STORAGE_KEY = 'smartParkingTheme';
 const SCROLL_NAV_THRESHOLD = 60;
 const COUNTER_DURATION = 2000;
 const STYLE_ELEMENT_ID = 'index-js-styles';
@@ -121,126 +120,6 @@ const injectDynamicStyles = () => {
     [data-scroll-animate].is-visible:nth-child(3) { transition-delay: 0.19s; }
     [data-scroll-animate].is-visible:nth-child(4) { transition-delay: 0.26s; }
 
-    // /* Dark mode toggle button */
-    // #theme-toggle {
-    //   display: inline-flex;
-    //   align-items: center;
-    //   justify-content: center;
-    //   width: 42px;
-    //   height: 42px;
-    //   margin-right: 0.5rem;
-    //   padding: 0;
-    //   border: 1.5px solid rgba(255, 255, 255, 0.12);
-    //   border-radius: 9999px;
-    //   background: rgba(255, 255, 255, 0.06);
-    //   backdrop-filter: blur(8px);
-    //   -webkit-backdrop-filter: blur(8px);
-    //   color: #f1f5f9;
-    //   font-size: 1.15rem;
-    //   cursor: pointer;
-    //   transition:
-    //     transform 0.2s ease,
-    //     background 0.3s ease,
-    //     border-color 0.3s ease,
-    //     box-shadow 0.3s ease;
-    // }
-
-    // #theme-toggle:hover {
-    //   transform: scale(1.08) rotate(15deg);
-    //   border-color: rgba(99, 102, 241, 0.5);
-    //   box-shadow: 0 4px 16px rgba(99, 102, 241, 0.3);
-    // }
-
-    // #theme-toggle:focus-visible {
-    //   outline: 2px solid #6366f1;
-    //   outline-offset: 2px;
-    // }
-
-    // /* Light theme overrides */
-    // html[data-theme="light"] body {
-    //   color: #1e293b;
-    //   background: linear-gradient(160deg, #f8fafc 0%, #e0e7ff 40%, #f0fdfa 100%);
-    // }
-
-    // html[data-theme="light"] body::before {
-    //   background:
-    //     radial-gradient(ellipse 80% 60% at 20% 10%, rgba(99, 102, 241, 0.1), transparent),
-    //     radial-gradient(ellipse 60% 50% at 80% 80%, rgba(6, 182, 212, 0.08), transparent);
-    // }
-
-    // html[data-theme="light"] p {
-    //   color: #64748b;
-    // }
-
-    // html[data-theme="light"] header {
-    //   background: rgba(255, 255, 255, 0.85);
-    //   border-bottom-color: rgba(0, 0, 0, 0.08);
-    // }
-
-    // html[data-theme="light"] header.nav-scrolled {
-    //   background: rgba(255, 255, 255, 0.95);
-    //   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08);
-    // }
-
-    // html[data-theme="light"] header nav a {
-    //   color: #475569;
-    // }
-
-    // html[data-theme="light"] header nav a.nav-active,
-    // html[data-theme="light"] header nav a:hover {
-    //   color: #1e293b;
-    // }
-
-    // html[data-theme="light"] #features article,
-    // html[data-theme="light"] #how-it-works ol li article,
-    // html[data-theme="light"] #statistics article {
-    //   background: rgba(255, 255, 255, 0.7);
-    //   border-color: rgba(0, 0, 0, 0.08);
-    //   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.06);
-    // }
-
-    // html[data-theme="light"] #features article h3,
-    // html[data-theme="light"] #how-it-works ol li article h3 {
-    //   color: #1e293b;
-    // }
-
-    // html[data-theme="light"] #cta {
-    //   background: rgba(255, 255, 255, 0.75);
-    //   border-color: rgba(0, 0, 0, 0.08);
-    // }
-
-    // html[data-theme="light"] #cta h2 {
-    //   color: #1e293b;
-    // }
-
-    // html[data-theme="light"] footer {
-    //   background: rgba(255, 255, 255, 0.9);
-    //   border-top-color: rgba(0, 0, 0, 0.08);
-    // }
-
-    // html[data-theme="light"] footer h2 {
-    //   color: #1e293b;
-    // }
-
-    // html[data-theme="light"] footer a {
-    //   color: #64748b;
-    // }
-
-    // html[data-theme="light"] footer a:hover {
-    //   color: #6366f1;
-    // }
-
-    // html[data-theme="light"] #theme-toggle {
-    //   background: rgba(0, 0, 0, 0.04);
-    //   border-color: rgba(0, 0, 0, 0.1);
-    //   color: #1e293b;
-    // }
-
-    // html[data-theme="light"] #hero > div > p:first-of-type {
-    //   background: rgba(99, 102, 241, 0.1);
-    //   border-color: rgba(99, 102, 241, 0.2);
-    //   color: #4f46e5;
-    // }
 
     @media (prefers-reduced-motion: reduce) {
       [data-scroll-animate] {
@@ -416,56 +295,6 @@ const initScrollAnimations = () => {
   animateTargets.forEach((el) => scrollObserver.observe(el));
 };
 
-/* ---------- Dark Mode Toggle ---------- */
-
-// /**
-//  * Apply the saved or default theme to the document.
-//  * @param {string} theme - "dark" | "light"
-//  */
-// const applyTheme = (theme) => {
-//   const root = document.documentElement;
-//   const isLight = theme === 'light';
-
-//   root.setAttribute('data-theme', isLight ? 'light' : 'dark');
-
-//   const toggle = document.getElementById('theme-toggle');
-//   if (toggle) {
-//     toggle.setAttribute('aria-label', isLight ? 'Switch to dark mode' : 'Switch to light mode');
-//     toggle.textContent = isLight ? '🌙' : '☀️';
-//   }
-// };
-
-/**
- * Toggle between dark and light themes and persist the choice.
- */
-// const toggleTheme = () => {
-//   const current = localStorage.getItem(THEME_STORAGE_KEY) || 'dark';
-//   const next = current === 'dark' ? 'light' : 'dark';
-
-//   localStorage.setItem(THEME_STORAGE_KEY, next);
-//   applyTheme(next);
-// };
-
-/**
- * Create and mount the dark mode toggle button in the header.
-//  */
-// const initDarkModeToggle = () => {
-//   const authContainer = document.querySelector('header > div > div:last-child');
-//   if (!authContainer) return;
-
-//   const savedTheme = localStorage.getItem(THEME_STORAGE_KEY) || 'dark';
-//   applyTheme(savedTheme);
-
-//   const toggleBtn = document.createElement('button');
-//   toggleBtn.id = 'theme-toggle';
-//   toggleBtn.type = 'button';
-//   toggleBtn.setAttribute('aria-label', 'Toggle dark mode');
-
-//   toggleBtn.addEventListener('click', toggleTheme);
-
-//   authContainer.insertBefore(toggleBtn, authContainer.firstChild);
-//   applyTheme(savedTheme);
-// };
 
 /* ---------- Initialise ---------- */
 

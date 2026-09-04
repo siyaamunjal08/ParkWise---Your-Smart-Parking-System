@@ -28,10 +28,6 @@
      5. renderActiveBookings() — build booking cards or empty state
      6. Event listeners     — logout button, cancel buttons
 
-   DOES NOT:
-     - Contain business logic (auth.js, storage.js handle that)
-     - Use inline event handlers (no onclick in HTML)
-     - Set inline CSS (classList only)
 
 
    ============================================================ */
@@ -60,7 +56,7 @@ const escapeHTML = (str) => {
 
 /**
  * Get the first name from a full name string.
- * "John Smith" → "John"
+ * "Arpit Jain" → "Arpit"
  * @param {string} fullName
  * @returns {string}
  */

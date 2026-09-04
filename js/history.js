@@ -36,10 +36,7 @@
      PAGE_SIZE cards shown at a time. Load More adds PAGE_SIZE more.
      Filters/sort/search always reset to page 1.
 
-   DOES NOT:
-     - Use inline CSS or inline event handlers
-     - Modify previously created files
-     - Contain validation logic (handled in validation.js)
+
 
    ============================================================ */
 
@@ -489,11 +486,7 @@ getElement('history-list')?.addEventListener('click', (event) => {
   if (bookingId) handleCancelBooking(bookingId, cancelBtn);
 });
 
-// // ── Load More ─────────────────────────────────────────────
-// getElement('btn-load-more')?.addEventListener('click', () => {
-//   // state.visibleCount += PAGE_SIZE;
-//   renderHistoryList();
-// });
+
 
 // ── Logout ────────────────────────────────────────────────
 getElement('btn-logout')?.addEventListener('click', logoutUser);
