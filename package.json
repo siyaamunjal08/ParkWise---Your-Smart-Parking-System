@@ -1,0 +1,36 @@
+{
+  "name": "parkwise",
+  "version": "2.0.0",
+  "description": "ParkWise — Smart Parking System (Eval-2)",
+  "private": true,
+  "main": "server/server.js",
+  "scripts": {
+    "start": "node server/server.js",
+    "dev": "nodemon server/server.js",
+    "db:check": "node server/scripts/checkDb.js",
+    "db:check:test": "node server/scripts/checkDb.js --test",
+    "seed:demo": "node server/scripts/seedDemo.js",
+    "admin:create": "node server/scripts/createAdmin.js",
+    "lint": "node server/scripts/lint.js",
+    "test:unit": "node --test tests/foundation.test.js tests/db.test.js tests/auth.test.js tests/locations.test.js tests/bookings.test.js tests/apiClient.test.js tests/locationsFrontend.test.js tests/bookingFrontend.test.js tests/adminFrontend.test.js tests/stage11a.test.js tests/stage11b.test.js",
+    "test:integration": "node --test tests/integration.test.js",
+    "test:stage5": "node --test tests/locations.test.js",
+    "test:stage6": "node --test tests/bookings.test.js",
+    "test:stage8": "node --test tests/locationsFrontend.test.js",
+    "test:stage9": "node --test tests/bookingFrontend.test.js",
+    "test:stage10": "node --test tests/adminFrontend.test.js",
+    "test:stage11a": "node --test tests/stage11a.test.js",
+    "test:stage11b": "node --test tests/stage11b.test.js"
+  },
+  "dependencies": {
+    "bcryptjs": "^3.0.3",
+    "dotenv": "^16.4.7",
+    "express": "^5.0.1",
+    "helmet": "^8.0.0",
+    "jsonwebtoken": "^9.0.3",
+    "mongoose": "^8.24.5"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.9"
+  }
+}
