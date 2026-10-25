@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Smart Parking Lot Booking & Intelligent Slot Recommendation System — find and reserve parking slots instantly.">
+  <title>ParkWise — Smart Parking Platform</title>
+
+  <link rel="stylesheet" href="css/style.css">
+  <meta name="theme-color" content="#0f172a">
+</head>
+<body>
+
+  <a href="#main-content" class="skip-link">Skip to main content</a>
+
+  <header class="site-header">
+    <div class="header-inner">
+      <a href="index.html" class="logo" aria-label="Smart Parking System home">
+        <strong>ParkWise</strong>
+      </a>
+
+      <nav aria-label="Main navigation" class="site-nav">
+        <ul>
+          <li><a href="index.html" aria-current="page" class="nav-active">Home</a></li>
+          <li><a href="locations.html">Find Parking</a></li>
+          <li><a href="dashboard.html">Dashboard</a></li>
+          <li id="nav-admin-link" class="hidden"><a href="admin.html">Admin Console</a></li>
+          <li><a href="#features">Features</a></li>
+          <li><a href="#how-it-works">How It Works</a></li>
+          <li><a href="#statistics">Statistics</a></li>
+        </ul>
+      </nav>
+
+      <div id="header-auth" class="header-auth"></div>
+    </div>
+  </header>
+
+  <main id="main-content">
+
+    <section id="hero" aria-labelledby="hero-heading">
+      <div class="hero-content">
+        <span class="hero-eyebrow">Smart Parking Platform</span>
+        <h1 id="hero-heading">Book Your Parking Slot in Seconds</h1>
+        <p class="hero-subtitle">
+          Find available slots, get smart recommendations, and reserve your spot
+          before you arrive. No more circling the lot.
+        </p>
+        <div class="hero-cta-group">
+          <a href="locations.html" class="btn btn-primary">Find Parking</a>
+          <a href="#how-it-works" class="btn btn-outline">How It Works</a>
+        </div>
+      </div>
+      <figure class="hero-figure">
+        <img
+          src="assets/images/hero-parking.svg"
+          alt="Illustration of a ParkWise lot with available and occupied slots"
+          width="600"
+          height="400"
+          fetchpriority="high"
+        >
+      </figure>
+    </section>
+
+    <section id="features" aria-labelledby="features-heading">
+      <header>
+        <h2 id="features-heading">Features</h2>
+        <p>Everything you need for a seamless parking experience.</p>
+      </header>
+
+      <div class="features-grid">
+        <article class="feature-card">
+          <figure class="feature-icon-wrapper">
+            <svg class="feature-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+          </figure>
+          <h3>Real-Time Availability</h3>
+          <p>
+            View live slot status across parking lots and pick an open spot
+            instantly.
+          </p>
+        </article>
+
+        <article class="feature-card">
+          <figure class="feature-icon-wrapper">
+            <svg class="feature-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z"/></svg>
+          </figure>
+          <h3>Intelligent Recommendations</h3>
+          <p>
+            Get slot suggestions based on your location, vehicle type, and
+            preferred parking duration.
+          </p>
+        </article>
+
+        <article class="feature-card">
+          <figure class="feature-icon-wrapper">
+            <svg class="feature-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/><path d="m9 16 2 2 4-4"/></svg>
+          </figure>
+          <h3>Quick Booking</h3>
+          <p>
+            Reserve a slot in a few clicks and receive confirmation details
+            right away.
+          </p>
+        </article>
+
+        <article class="feature-card">
+          <figure class="feature-icon-wrapper">
+            <svg class="feature-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/><polyline points="12 7 12 12 15 15"/></svg>
+          </figure>
+          <h3>Booking History</h3>
+          <p>
+            Track past reservations and manage upcoming bookings from one
+            dashboard.
+          </p>
+        </article>
+      </div>
+    </section>
+
+    <section id="how-it-works" aria-labelledby="how-it-works-heading">
+      <header>
+        <h2 id="how-it-works-heading">How It Works</h2>
+        <p>From search to parking in four simple steps.</p>
+      </header>
+
+      <ol class="steps-grid">
+        <li>
+          <article class="step-card">
+            <span class="step-num">01</span>
+            <h3>Search a Location</h3>
+            <p>
+              Enter your destination or select a nearby parking lot from the
+              map view.
+            </p>
+          </article>
+        </li>
+        <li>
+          <article class="step-card">
+            <span class="step-num">02</span>
+            <h3>View Available Slots</h3>
+            <p>
+              Browse real-time slot availability and compare options by distance,
+              price, and vehicle type.
+            </p>
+          </article>
+        </li>
+        <li>
+          <article class="step-card">
+            <span class="step-num">03</span>
+            <h3>Book Your Slot</h3>
+            <p>
+              Choose a slot, confirm your booking details, and secure your
+              reservation instantly.
+            </p>
+          </article>
+        </li>
+        <li>
+          <article class="step-card">
+            <span class="step-num">04</span>
+            <h3>Park with Confidence</h3>
+            <p>
+              Arrive at your reserved slot, check in, and enjoy a stress-free
+              parking experience.
+            </p>
+          </article>
+        </li>
+      </ol>
+
+      <p class="how-it-works-action">
+        <a href="locations.html" class="btn btn-primary">Find Parking</a>
+      </p>
+    </section>
+
+    <section id="statistics" aria-labelledby="statistics-heading">
+      <header>
+        <h2 id="statistics-heading">Parking Statistics</h2>
+        <p>Live insights from our ParkWise network.</p>
+      </header>
+
+      <div class="statistics-grid">
+        <article class="stat-card" aria-labelledby="stat-total-slots-label">
+          <h3 id="stat-total-slots" aria-live="polite" aria-atomic="true">1,250</h3>
+          <p id="stat-total-slots-label">Total Parking Slots</p>
+        </article>
+
+        <article class="stat-card" aria-labelledby="stat-available-label">
+          <h3 id="stat-available" aria-live="polite" aria-atomic="true">842</h3>
+          <p id="stat-available-label">Available Now</p>
+        </article>
+
+        <article class="stat-card" aria-labelledby="stat-occupied-label">
+          <h3 id="stat-occupied" aria-live="polite" aria-atomic="true">408</h3>
+          <p id="stat-occupied-label">Currently Occupied</p>
+        </article>
+
+        <article class="stat-card" aria-labelledby="stat-bookings-label">
+          <h3 id="stat-bookings" aria-live="polite" aria-atomic="true">3,680</h3>
+          <p id="stat-bookings-label">Bookings This Month</p>
+        </article>
+      </div>
+    </section>
+
+    <section id="cta" aria-labelledby="cta-heading">
+      <h2 id="cta-heading">Ready to Find Your Spot?</h2>
+      <p>
+        Join thousands of drivers who save time with ParkWise every day.
+      </p>
+      <div class="cta-actions">
+        <a href="locations.html" class="btn btn-primary">Find Parking</a>
+        <a href="register.html" class="btn btn-outline">Register</a>
+        <a href="login.html" class="btn btn-outline">Login</a>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="site-footer">
+    <div class="footer-inner">
+      <div class="footer-brand">
+        <strong>ParkWise</strong>
+        <p>
+          Smart Parking Lot Booking &amp; Intelligent Slot Recommendation System.
+        </p>
+      </div>
+
+      <nav aria-label="Footer navigation">
+        <h3>Quick Links</h3>
+        <ul>
+          <li><a href="#features">Features</a></li>
+          <li><a href="#how-it-works">How It Works</a></li>
+          <li><a href="#statistics">Statistics</a></li>
+          <li><a href="locations.html">Find Parking</a></li>
+        </ul>
+      </nav>
+
+      <div>
+        <h3>Account</h3>
+        <ul>
+          <li><a href="login.html">Login</a></li>
+          <li><a href="register.html">Register</a></li>
+        </ul>
+      </div>
+
+      <div>
+        <h3>Contact</h3>
+        <address>
+          <p>Email: <a href="mailto:support@smartparking.com">support@smartparking.com</a></p>
+          <p>Phone: <a href="tel:+911234567890">+91 12345 67890</a></p>
+        </address>
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      <p>&copy; 2026 ParkWise. All rights reserved.</p>
+    </div>
+  </footer>
+
+  <script src="js/storage.js"></script>
+  <script src="js/api.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/index.js" defer></script>
+
+</body>
+</html>
