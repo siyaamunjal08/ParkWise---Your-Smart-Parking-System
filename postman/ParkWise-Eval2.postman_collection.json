@@ -1,0 +1,1471 @@
+{
+  "info": {
+    "_postman_id": "parkwise-eval2-collection",
+    "name": "ParkWise Eval-2 API Collection",
+    "description": "Comprehensive, evaluation-ready Postman collection for the ParkWise Smart Parking System. Includes safe runnable read-only requests, dynamic environment token capture, RBAC security assertions (401/403), and clearly labelled manual data-changing requests.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "01 - System Health & Readiness (Safe)",
+      "description": "Public, non-mutating system diagnostics and database readiness probes.",
+      "item": [
+        {
+          "name": "GET Health Check",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/health",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "health"
+              ]
+            },
+            "description": "Returns basic service uptime and server status."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status code is 200 OK\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test(\"Response indicates healthy status\", function () {",
+                  "    var json = pm.response.json();",
+                  "    pm.expect(json.success).to.be.true;",
+                  "    pm.expect(json.status).to.eql(\"ok\");",
+                  "    pm.expect(json).to.have.property(\"uptime\");",
+                  "});",
+                  "pm.test(\"No secrets or stack traces leaked\", function () {",
+                  "    pm.expect(pm.response.text()).to.not.include(\"passwordHash\");",
+                  "    pm.expect(pm.response.text()).to.not.include(\"JWT_SECRET\");",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "GET Readiness Probe",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/ready",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "ready"
+              ]
+            },
+            "description": "Verifies active MongoDB Atlas cluster connectivity."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status code is 200 OK\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test(\"Database cluster is connected and ready\", function () {",
+                  "    var json = pm.response.json();",
+                  "    pm.expect(json.success).to.be.true;",
+                  "    pm.expect(json.connected).to.be.true;",
+                  "    pm.expect(json).to.have.property(\"database\");",
+                  "});"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "02 - Location Discovery (Safe Read-Only)",
+      "description": "Public location search, filtering, slot availability, and rule-based recommendation queries.",
+      "item": [
+        {
+          "name": "GET All Public Locations",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/locations",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "locations"
+              ]
+            },
+            "description": "Retrieves active and closed public parking facilities."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status code is 200 OK\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test(\"Returns success envelope and locations array\", function () {",
+                  "    var json = pm.response.json();",
+                  "    pm.expect(json.success).to.be.true;",
+                  "    pm.expect(json.locations).to.be.an(\"array\");",
+                  "    if (json.locations.length > 0) {",
+                  "        pm.environment.set(\"locationId\", json.locations[0].id || json.locations[0]._id);",
+                  "    }",
+                  "});",
+                  "pm.test(\"Drafts and archived facilities are excluded\", function () {",
+                  "    var json = pm.response.json();",
+                  "    json.locations.forEach(function (loc) {",
+                  "        pm.expect([\"active\", \"closed\"]).to.include(loc.status);",
+                  "    });",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "GET Filtered Locations by City",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/locations?city=Mumbai",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "locations"
+              ],
+              "query": [
+                {
+                  "key": "city",
+                  "value": "Mumbai"
+                }
+              ]
+            },
+            "description": "Searches parking locations filtered by city."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status code is 200 OK\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test(\"Filtered results adhere to schema\", function () {",
+                  "    var json = pm.response.json();",
+                  "    pm.expect(json.success).to.be.true;",
+                  "    pm.expect(json.locations).to.be.an(\"array\");",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "GET Location Details",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/locations/{{locationId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "locations",
+                "{{locationId}}"
+              ]
+            },
+            "description": "Returns metadata, coordinates, totalSlots, and availableSlots."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status code is 200 OK or 404 (if unpopulated)\", function () {",
+                  "    pm.expect([200, 404]).to.include(pm.response.code);",
+                  "});",
+                  "if (pm.response.code === 200) {",
+                  "    pm.test(\"Location details structure adheres to schema\", function () {",
+                  "        var json = pm.response.json();",
+                  "        pm.expect(json.success).to.be.true;",
+                  "        pm.expect(json.location).to.have.property(\"totalSlots\");",
+                  "        pm.expect(json.location).to.have.property(\"availableSlots\");",
+                  "    });",
+                  "}"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "GET Location Slots Availability",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/locations/{{locationId}}/slots?status=available",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "locations",
+                "{{locationId}}",
+                "slots"
+              ],
+              "query": [
+                {
+                  "key": "status",
+                  "value": "available"
+                }
+              ]
+            },
+            "description": "Returns available non-maintenance parking slots for facility."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status code is 200 OK or 404\", function () {",
+                  "    pm.expect([200, 404]).to.include(pm.response.code);",
+                  "});",
+                  "if (pm.response.code === 200) {",
+                  "    pm.test(\"Slots response contains valid slots array\", function () {",
+                  "        var json = pm.response.json();",
+                  "        pm.expect(json.success).to.be.true;",
+                  "        pm.expect(json.slots).to.be.an(\"array\");",
+                  "        if (json.slots.length > 0) {",
+                  "            pm.environment.set(\"slotId\", json.slots[0].id || json.slots[0]._id);",
+                  "        }",
+                  "    });",
+                  "}"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "GET Slot Recommendations (Car)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/locations/{{locationId}}/recommendations?vehicleType=car",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "locations",
+                "{{locationId}}",
+                "recommendations"
+              ],
+              "query": [
+                {
+                  "key": "vehicleType",
+                  "value": "car"
+                }
+              ]
+            },
+            "description": "Returns top 3 recommended slots ranked by price and distance."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status code is 200 OK or 404/409\", function () {",
+                  "    pm.expect([200, 404, 409]).to.include(pm.response.code);",
+                  "});",
+                  "if (pm.response.code === 200) {",
+                  "    pm.test(\"Recommendations response contains up to 3 slots\", function () {",
+                  "        var json = pm.response.json();",
+                  "        pm.expect(json.success).to.be.true;",
+                  "        pm.expect(json.recommendations).to.be.an(\"array\");",
+                  "        pm.expect(json.recommendations.length).to.be.at.most(3);",
+                  "    });",
+                  "}"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "03 - Authentication & RBAC Checks",
+      "description": "Login endpoints with dynamic token capture, and security checks demonstrating 401 Unauthorized and 403 Forbidden.",
+      "item": [
+        {
+          "name": "POST User Login (Populates userToken)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"{{userEmail}}\",\n  \"password\": \"{{userPassword}}\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/auth/login",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "auth",
+                "login"
+              ]
+            },
+            "description": "Logs in as standard driver and stores JWT into environment variable userToken."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "if (pm.response.code === 200) {",
+                  "    var json = pm.response.json();",
+                  "    pm.test(\"Login successful\", function () {",
+                  "        pm.expect(json.success).to.be.true;",
+                  "        pm.expect(json).to.have.property(\"token\");",
+                  "    });",
+                  "    pm.environment.set(\"userToken\", json.token);",
+                  "    pm.test(\"No passwordHash leaked\", function () {",
+                  "        pm.expect(pm.response.text()).to.not.include(\"passwordHash\");",
+                  "    });",
+                  "} else {",
+                  "    pm.test(\"Login credentials required\", function () {",
+                  "        pm.expect([400, 401]).to.include(pm.response.code);",
+                  "    });",
+                  "}"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "POST Admin Login (Populates adminToken)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"{{adminEmail}}\",\n  \"password\": \"{{adminPassword}}\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/auth/login",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "auth",
+                "login"
+              ]
+            },
+            "description": "Logs in as administrator and stores JWT into environment variable adminToken."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "if (pm.response.code === 200) {",
+                  "    var json = pm.response.json();",
+                  "    pm.test(\"Admin login successful\", function () {",
+                  "        pm.expect(json.success).to.be.true;",
+                  "        pm.expect(json.user.role).to.eql(\"admin\");",
+                  "    });",
+                  "    pm.environment.set(\"adminToken\", json.token);",
+                  "} else {",
+                  "    pm.test(\"Admin credentials required\", function () {",
+                  "        pm.expect([400, 401]).to.include(pm.response.code);",
+                  "    });",
+                  "}"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "GET Authenticated User Profile (Me)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{userToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/auth/me",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "auth",
+                "me"
+              ]
+            },
+            "description": "Demonstrates verified access to protected profile endpoint with Bearer token."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "if (pm.environment.get(\"userToken\")) {",
+                  "    pm.test(\"Status code is 200 OK\", function () {",
+                  "        pm.response.to.have.status(200);",
+                  "    });",
+                  "    pm.test(\"Returns user profile without passwordHash\", function () {",
+                  "        var json = pm.response.json();",
+                  "        pm.expect(json.success).to.be.true;",
+                  "        pm.expect(json.user).to.have.property(\"email\");",
+                  "        pm.expect(pm.response.text()).to.not.include(\"passwordHash\");",
+                  "    });",
+                  "} else {",
+                  "    pm.test(\"Requires userToken to test\", function () {",
+                  "        pm.expect([200, 401]).to.include(pm.response.code);",
+                  "    });",
+                  "}"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "GET Profile Unauthenticated (Demonstrates 401)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/auth/me",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "auth",
+                "me"
+              ]
+            },
+            "description": "Security assertion: Protected route called without Bearer token must return 401 Unauthorized."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status code is 401 Unauthorized\", function () {",
+                  "    pm.response.to.have.status(401);",
+                  "});",
+                  "pm.test(\"Response contains standardized error message\", function () {",
+                  "    var json = pm.response.json();",
+                  "    pm.expect(json.success).to.be.false;",
+                  "    pm.expect(json).to.have.property(\"message\");",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "GET Admin Summary as Normal User (Demonstrates 403)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{userToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/admin/summary",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "admin",
+                "summary"
+              ]
+            },
+            "description": "Security assertion: Admin route called with standard user token must return 403 Forbidden."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "if (pm.environment.get(\"userToken\")) {",
+                  "    pm.test(\"Status code is 403 Forbidden\", function () {",
+                  "        pm.response.to.have.status(403);",
+                  "    });",
+                  "    pm.test(\"Rejection envelope returned\", function () {",
+                  "        var json = pm.response.json();",
+                  "        pm.expect(json.success).to.be.false;",
+                  "    });",
+                  "} else {",
+                  "    pm.test(\"Requires userToken to test 403\", function () {",
+                  "        pm.expect([401, 403]).to.include(pm.response.code);",
+                  "    });",
+                  "}"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "04 - User Bookings & Vehicles (Safe Read-Only)",
+      "description": "Authenticated, read-only queries for personal saved vehicles and booking history.",
+      "item": [
+        {
+          "name": "GET My Bookings",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{userToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/bookings/me?page=1&limit=10",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "bookings",
+                "me"
+              ],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "limit",
+                  "value": "10"
+                }
+              ]
+            },
+            "description": "Returns authenticated user booking history with pagination, serverTime, and all-time counts."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "if (pm.environment.get(\"userToken\")) {",
+                  "    pm.test(\"Status code is 200 OK\", function () {",
+                  "        pm.response.to.have.status(200);",
+                  "    });",
+                  "    pm.test(\"Contains counts breakdown and bookings array\", function () {",
+                  "        var json = pm.response.json();",
+                  "        pm.expect(json.success).to.be.true;",
+                  "        pm.expect(json.bookings).to.be.an(\"array\");",
+                  "        pm.expect(json).to.have.property(\"counts\");",
+                  "        if (json.bookings.length > 0) {",
+                  "            pm.environment.set(\"bookingId\", json.bookings[0].id || json.bookings[0]._id);",
+                  "        }",
+                  "    });",
+                  "}"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "GET My Saved Vehicles",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{userToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/vehicles/me",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "vehicles",
+                "me"
+              ]
+            },
+            "description": "Returns authenticated user saved vehicle profile list."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "if (pm.environment.get(\"userToken\")) {",
+                  "    pm.test(\"Status code is 200 OK\", function () {",
+                  "        pm.response.to.have.status(200);",
+                  "    });",
+                  "    pm.test(\"Returns vehicles array\", function () {",
+                  "        var json = pm.response.json();",
+                  "        pm.expect(json.success).to.be.true;",
+                  "        pm.expect(json.vehicles).to.be.an(\"array\");",
+                  "        if (json.vehicles.length > 0) {",
+                  "            pm.environment.set(\"vehicleId\", json.vehicles[0].id || json.vehicles[0]._id);",
+                  "        }",
+                  "    });",
+                  "}"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "05 - Admin Management (Safe Read-Only)",
+      "description": "Administrative read-only queries for system summary, multi-location listings, and booking audits.",
+      "item": [
+        {
+          "name": "GET Admin Summary Telemetry",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{adminToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/admin/summary",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "admin",
+                "summary"
+              ]
+            },
+            "description": "Returns operational telemetry: total/active/draft locations, slot availability counts, and booking counts."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "if (pm.environment.get(\"adminToken\")) {",
+                  "    pm.test(\"Status code is 200 OK\", function () {",
+                  "        pm.response.to.have.status(200);",
+                  "    });",
+                  "    pm.test(\"Returns summary metrics\", function () {",
+                  "        var json = pm.response.json();",
+                  "        pm.expect(json.success).to.be.true;",
+                  "        pm.expect(json.summary).to.have.property(\"locations\");",
+                  "        pm.expect(json.summary).to.have.property(\"slots\");",
+                  "    });",
+                  "}"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "GET Admin Locations List",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{adminToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/admin/locations?page=1&limit=10",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "admin",
+                "locations"
+              ],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "limit",
+                  "value": "10"
+                }
+              ]
+            },
+            "description": "Returns all managed facilities including drafts and archives with slot breakdown counts."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "if (pm.environment.get(\"adminToken\")) {",
+                  "    pm.test(\"Status code is 200 OK\", function () {",
+                  "        pm.response.to.have.status(200);",
+                  "    });",
+                  "    pm.test(\"Returns admin location list\", function () {",
+                  "        var json = pm.response.json();",
+                  "        pm.expect(json.success).to.be.true;",
+                  "        pm.expect(json.locations).to.be.an(\"array\");",
+                  "    });",
+                  "}"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "GET Admin Bookings Audit",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{adminToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/admin/bookings?page=1&limit=20",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "admin",
+                "bookings"
+              ],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "limit",
+                  "value": "20"
+                }
+              ]
+            },
+            "description": "Returns system-wide booking audit list with populated user contact details (without passwordHash)."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "if (pm.environment.get(\"adminToken\")) {",
+                  "    pm.test(\"Status code is 200 OK\", function () {",
+                  "        pm.response.to.have.status(200);",
+                  "    });",
+                  "    pm.test(\"Booking audit data includes populated safe user fields\", function () {",
+                  "        var json = pm.response.json();",
+                  "        pm.expect(json.success).to.be.true;",
+                  "        pm.expect(json.bookings).to.be.an(\"array\");",
+                  "        pm.expect(pm.response.text()).to.not.include(\"passwordHash\");",
+                  "    });",
+                  "}"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "GET Admin Location Slots",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{adminToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/admin/locations/{{locationId}}/slots",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "admin",
+                "locations",
+                "{{locationId}}",
+                "slots"
+              ]
+            },
+            "description": "Returns all slots including maintenance and occupied records for admin inspection."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "if (pm.environment.get(\"adminToken\") && pm.environment.get(\"locationId\")) {",
+                  "    pm.test(\"Status code is 200 OK\", function () {",
+                  "        pm.response.to.have.status(200);",
+                  "    });",
+                  "    pm.test(\"Admin slots list response is valid\", function () {",
+                  "        var json = pm.response.json();",
+                  "        pm.expect(json.success).to.be.true;",
+                  "        pm.expect(json.slots).to.be.an(\"array\");",
+                  "    });",
+                  "} else {",
+                  "    pm.test(\"Requires adminToken and locationId to test\", function () {",
+                  "        pm.expect([200, 400, 401, 403, 404]).to.include(pm.response.code);",
+                  "    });",
+                  "}"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "06 - Data Mutation Endpoints (Manual Only - Changes Data)",
+      "description": "Side-effecting create, update, and delete endpoints. These modify database records and are intended for manual evaluator demonstrations, NOT unattended automated runs.",
+      "item": [
+        {
+          "name": "[Manual Only — Changes Data] POST User Registration",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Postman Test Driver\",\n  \"email\": \"postman-driver-{{$timestamp}}@example.com\",\n  \"phone\": \"+91 9876543210\",\n  \"password\": \"Password@123\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/auth/register",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "auth",
+                "register"
+              ]
+            },
+            "description": "Manual data-changing request. Registers a test user account using a dynamic timestamped email to guarantee uniqueness. Must be run individually, not in Collection Runner."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status code is 201 Created\", function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});",
+                  "var json = pm.response.json();",
+                  "pm.test(\"Registration returns user object and auth token\", function () {",
+                  "    pm.expect(json.success).to.be.true;",
+                  "    pm.expect(json).to.have.property(\"token\");",
+                  "    pm.expect(json.user).to.have.property(\"email\");",
+                  "});",
+                  "if (json.token) {",
+                  "    pm.environment.set(\"userToken\", json.token);",
+                  "}"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "[Manual Only — Changes Data] POST Create Saved Vehicle",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{userToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"registrationNumber\": \"KA-{{$timestamp}}\",\n  \"type\": \"car\",\n  \"label\": \"Office Sedan\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/vehicles",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "vehicles"
+              ]
+            },
+            "description": "Manual data-changing request. Creates a saved vehicle for the authenticated user with a unique registration number. Run individually. Captures vehicleId."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status code is 201 Created\", function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});",
+                  "var json = pm.response.json();",
+                  "pm.test(\"Vehicle created successfully and vehicleId captured\", function () {",
+                  "    pm.expect(json.success).to.be.true;",
+                  "    pm.expect(json.vehicle).to.have.property(\"registrationNumber\");",
+                  "    pm.expect(json.vehicle).to.have.property(\"id\");",
+                  "});",
+                  "if (json.vehicle && json.vehicle.id) {",
+                  "    pm.environment.set(\"vehicleId\", json.vehicle.id);",
+                  "}"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "[Manual Only — Changes Data] PATCH Update Saved Vehicle",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{userToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"label\": \"Updated Family Car\",\n  \"type\": \"car\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/vehicles/{{vehicleId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "vehicles",
+                "{{vehicleId}}"
+              ]
+            },
+            "description": "Manual data-changing request. Updates the label/type of {{vehicleId}}. Run individually."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status code is 200 OK\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "var json = pm.response.json();",
+                  "pm.test(\"Vehicle updated successfully\", function () {",
+                  "    pm.expect(json.success).to.be.true;",
+                  "    pm.expect(json.vehicle.label).to.eql(\"Updated Family Car\");",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "[Manual Only — Changes Data] DELETE Saved Vehicle",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{userToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/vehicles/{{vehicleId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "vehicles",
+                "{{vehicleId}}"
+              ]
+            },
+            "description": "Manual data-changing request. Deletes {{vehicleId}} for the authenticated user. Run individually."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status code is 200 OK\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "var json = pm.response.json();",
+                  "pm.test(\"Vehicle deleted successfully\", function () {",
+                  "    pm.expect(json.success).to.be.true;",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "[Manual Only — Changes Data] POST Create Booking",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{userToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"locationId\": \"{{locationId}}\",\n  \"slotId\": \"{{slotId}}\",\n  \"vehicleNumber\": \"KA-{{$timestamp}}\",\n  \"vehicleType\": \"car\",\n  \"durationHours\": 2,\n  \"requestId\": \"{{$guid}}\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/bookings",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "bookings"
+              ]
+            },
+            "description": "Manual data-changing request. Books a slot with dynamic requestId (UUID) and vehicleNumber. Run individually. Captures bookingId."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status code is 201 Created\", function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});",
+                  "var json = pm.response.json();",
+                  "pm.test(\"Booking confirmed and bookingId captured\", function () {",
+                  "    pm.expect(json.success).to.be.true;",
+                  "    pm.expect(json.booking).to.have.property(\"id\");",
+                  "    pm.expect(json.booking.status).to.eql(\"active\");",
+                  "});",
+                  "if (json.booking && json.booking.id) {",
+                  "    pm.environment.set(\"bookingId\", json.booking.id);",
+                  "}"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "[Manual Only — Changes Data] PATCH Cancel Booking",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{userToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PATCH",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/bookings/{{bookingId}}/cancel",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "bookings",
+                "{{bookingId}}",
+                "cancel"
+              ]
+            },
+            "description": "Manual data-changing request. Cancels the booking referenced by {{bookingId}} and releases the slot. Run individually."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status code is 200 OK\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "var json = pm.response.json();",
+                  "pm.test(\"Booking cancelled successfully\", function () {",
+                  "    pm.expect(json.success).to.be.true;",
+                  "    pm.expect(json.booking.status).to.eql(\"cancelled\");",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "[Manual Only — Changes Data] POST Admin Create Location (Lifecycle Step 1)",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{adminToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Postman Demo Mall {{$timestamp}}\",\n  \"category\": \"mall\",\n  \"address\": \"Plot 44, Tech Boulevard\",\n  \"city\": \"Bengaluru\",\n  \"area\": \"Whitefield\",\n  \"contactPhone\": \"+91 9876543210\",\n  \"latitude\": 12.9716,\n  \"longitude\": 77.5946,\n  \"facilities\": [\n    \"CCTV\",\n    \"Covered parking\"\n  ]\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/admin/locations",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "admin",
+                "locations"
+              ]
+            },
+            "description": "Lifecycle Step 1 (Admin): Creates a new facility in 'draft' status. Unsupported fields (coordinates object, zones, basePricePerHourPaise) omitted. Stores locationId for slot creation."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status code is 201 Created\", function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});",
+                  "var json = pm.response.json();",
+                  "pm.test(\"Draft location created with valid id\", function () {",
+                  "    pm.expect(json.success).to.be.true;",
+                  "    pm.expect(json.location).to.have.property(\"id\");",
+                  "    pm.expect(json.location.status).to.eql(\"draft\");",
+                  "});",
+                  "if (json.location && json.location.id) {",
+                  "    pm.environment.set(\"locationId\", json.location.id);",
+                  "}"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "[Manual Only — Changes Data] POST Admin Create Slot (Lifecycle Step 2)",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{adminToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"code\": \"PT-{{$timestamp}}\",\n  \"zone\": \"A\",\n  \"floor\": 1,\n  \"vehicleType\": \"car\",\n  \"pricePerHourPaise\": 4000,\n  \"distanceFromEntry\": 15,\n  \"features\": [\n    \"covered\"\n  ]\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/admin/locations/{{locationId}}/slots",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "admin",
+                "locations",
+                "{{locationId}}",
+                "slots"
+              ]
+            },
+            "description": "Lifecycle Step 2 (Admin): Creates a parking slot for {{locationId}}. Required before publishing because draft locations require >= 1 enabled slot to become active. Captures slotId."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status code is 201 Created\", function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});",
+                  "var json = pm.response.json();",
+                  "pm.test(\"Slot created successfully and slotId captured\", function () {",
+                  "    pm.expect(json.success).to.be.true;",
+                  "    pm.expect(json.slot).to.have.property(\"code\");",
+                  "    pm.expect(json.slot).to.have.property(\"id\");",
+                  "});",
+                  "if (json.slot && json.slot.id) {",
+                  "    pm.environment.set(\"slotId\", json.slot.id);",
+                  "}"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "[Manual Only — Changes Data] PATCH Admin Publish Location (Lifecycle Step 3)",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{adminToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"status\": \"active\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/admin/locations/{{locationId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "admin",
+                "locations",
+                "{{locationId}}"
+              ]
+            },
+            "description": "Lifecycle Step 3 (Admin): Publishes the location to 'active' status. Valid because Step 2 added at least one enabled slot. Run individually."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status code is 200 OK\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "var json = pm.response.json();",
+                  "pm.test(\"Location successfully published to active status\", function () {",
+                  "    pm.expect(json.success).to.be.true;",
+                  "    pm.expect(json.location.status).to.eql(\"active\");",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "[Manual Only — Changes Data] PATCH Admin Update Slot Maintenance (Lifecycle Step 4)",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{adminToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"serviceStatus\": \"maintenance\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/admin/locations/{{locationId}}/slots/{{slotId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "admin",
+                "locations",
+                "{{locationId}}",
+                "slots",
+                "{{slotId}}"
+              ]
+            },
+            "description": "Lifecycle Step 4 (Admin Optional): Sets slot serviceStatus to 'maintenance'. Run individually."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status code is 200 OK\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "var json = pm.response.json();",
+                  "pm.test(\"Slot status updated to maintenance\", function () {",
+                  "    pm.expect(json.success).to.be.true;",
+                  "    pm.expect(json.slot.serviceStatus).to.eql(\"maintenance\");",
+                  "});"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "event": [
+    {
+      "listen": "test",
+      "script": {
+        "type": "text/javascript",
+        "exec": [
+          "// Universal security & error hygiene assertions for all responses",
+          "pm.test(\"No passwordHash leaked in response body\", function () {",
+          "    pm.expect(pm.response.text()).to.not.include(\"passwordHash\");",
+          "});",
+          "",
+          "pm.test(\"No raw database or internal secrets leaked\", function () {",
+          "    var text = pm.response.text();",
+          "    pm.expect(text).to.not.include(\"MongoError\");",
+          "    pm.expect(text).to.not.include(\"MongoServerError\");",
+          "    pm.expect(text).to.not.include(\"MongooseError\");",
+          "    pm.expect(text).to.not.include(\"CastError\");",
+          "    pm.expect(text).to.not.include(\"JWT_SECRET\");",
+          "});"
+        ]
+      }
+    }
+  ]
+}
