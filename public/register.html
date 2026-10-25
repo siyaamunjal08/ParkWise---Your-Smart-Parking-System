@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Create your ParkWise account to book slots and manage reservations.">
+  <meta name="theme-color" content="#0f172a">
+  <title>Register | ParkWise</title>
+
+  <link rel="stylesheet" href="css/auth.css">
+</head>
+<body>
+
+  <!-- Header -->
+  <header class="site-header">
+    <div class="header-inner">
+      <a href="index.html" class="logo-link" aria-label="ParkWise home">
+        <strong>ParkWise</strong>
+      </a>
+
+      <nav aria-label="Main navigation">
+        <ul>
+          <li><a href="index.html#features">Features</a></li>
+          <li><a href="index.html#how-it-works">How It Works</a></li>
+          <li><a href="index.html#statistics">Statistics</a></li>
+        </ul>
+      </nav>
+
+      <div class="header-actions">
+        <a href="login.html" class="btn-auth-nav">Login</a>
+        <a href="register.html" class="btn-auth-nav" aria-current="page">Register</a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main>
+
+    <section id="register" aria-labelledby="register-heading">
+      <header class="auth-card-header">
+        <h1 id="register-heading">Create an Account</h1>
+        <p>Sign up to book parking slots and manage your reservations.</p>
+        <p class="auth-notice" id="eval1-notice">
+          <svg class="notice-icon" aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="10"></circle>
+            <line x1="12" y1="16" x2="12" y2="12"></line>
+            <line x1="12" y1="8" x2="12.01" y2="8"></line>
+          </svg>
+          <span>Note: Accounts created in earlier browser-only versions (Eval-1) were stored locally in the browser and are not backend accounts. Please register a new account to use cloud authentication.</span>
+        </p>
+      </header>
+
+      <form action="#" method="post" aria-label="Registration form">
+
+        <div class="form-group">
+          <label for="name">Name</label>
+          <input
+            type="text"
+            id="name"
+            name="name"
+            placeholder="Enter your full name"
+            autocomplete="name"
+            required
+            minlength="2"
+            maxlength="100"
+          >
+        </div>
+
+        <div class="form-group">
+          <label for="email">Email</label>
+          <input
+            type="email"
+            id="email"
+            name="email"
+            placeholder="Enter your email address"
+            autocomplete="email"
+            required
+          >
+        </div>
+
+        <div class="form-group">
+          <label for="phone">Phone</label>
+          <input
+            type="tel"
+            id="phone"
+            name="phone"
+            placeholder="Enter your phone number"
+            autocomplete="tel"
+            required
+            pattern="[0-9+\s\-()]{10,15}"
+            title="Enter a valid phone number (10–15 digits)"
+          >
+        </div>
+
+        <div class="form-group">
+          <label for="password">Password</label>
+          <input
+            type="password"
+            id="password"
+            name="password"
+            placeholder="Create a password"
+            autocomplete="new-password"
+            required
+            minlength="8"
+            maxlength="64"
+          >
+        </div>
+
+        <div class="form-group">
+          <label for="confirm-password">Confirm Password</label>
+          <input
+            type="password"
+            id="confirm-password"
+            name="confirmPassword"
+            placeholder="Re-enter your password"
+            autocomplete="new-password"
+            required
+            minlength="8"
+            maxlength="64"
+          >
+        </div>
+
+        <div class="form-group form-actions">
+          <button type="submit" class="btn-auth-submit">Register</button>
+        </div>
+
+      </form>
+
+      <p class="auth-switch-text">
+        Already have an account?
+        <a href="login.html">Login here</a>
+      </p>
+    </section>
+
+  </main>
+
+  <!-- Footer -->
+  <footer>
+    <div class="footer-grid">
+      <div>
+        <strong>ParkWise</strong>
+        <p>
+          ParkWise Lot Booking &amp; Intelligent Slot Recommendation System.
+        </p>
+      </div>
+
+      <nav aria-label="Footer navigation">
+        <h3>Quick Links</h3>
+        <ul>
+          <li><a href="index.html#features">Features</a></li>
+          <li><a href="index.html#how-it-works">How It Works</a></li>
+          <li><a href="index.html#statistics">Statistics</a></li>
+          <li><a href="booking.html">Book Slot</a></li>
+        </ul>
+      </nav>
+
+      <div>
+        <h3>Account</h3>
+        <ul>
+          <li><a href="login.html">Login</a></li>
+          <li><a href="register.html" aria-current="page">Register</a></li>
+        </ul>
+      </div>
+
+      <div>
+        <h3>Contact</h3>
+        <address>
+          <p>Email: <a href="mailto:support@smartparking.com">support@smartparking.com</a></p>
+          <p>Phone: <a href="tel:+911234567890">+91 12345 67890</a></p>
+        </address>
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      <p>&copy; 2026 ParkWise. All rights reserved.</p>
+    </div>
+  </footer>
+
+  <!-- Dependency order: storage → utils → api → validation → auth → page-specific -->
+  <script src="js/storage.js" defer></script>
+  <script src="js/utils.js" defer></script>
+  <script src="js/api.js" defer></script>
+  <script src="js/validation.js" defer></script>
+  <script src="js/auth.js" defer></script>
+  <script src="js/register.js" defer></script>
+
+</body>
+</html>
