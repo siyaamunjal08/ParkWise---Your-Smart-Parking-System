@@ -1,0 +1,596 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Book a parking slot at ParkWise Complex — filter by zone, vehicle type, and AI-recommended slots.">
+  <meta name="theme-color" content="#0a0f1d">
+  <meta name="robots" content="noindex, nofollow">
+  <title>Book a Slot | ParkWise</title>
+
+  <link rel="stylesheet" href="css/booking.css">
+</head>
+<body>
+
+  <!-- Header -->
+  <header class="site-header">
+    <div class="header-inner">
+
+      <!-- Logo -->
+      <a href="dashboard.html" class="logo-link" aria-label="ParkWise — go to dashboard">
+        <strong>ParkWise</strong>
+      </a>
+
+      <!-- App Navigation -->
+      <nav aria-label="Main navigation">
+        <ul class="nav-links">
+          <li><a href="dashboard.html">Dashboard</a></li>
+          <li><a href="booking.html" aria-current="page" class="nav-active">Book a Slot</a></li>
+          <li><a href="history.html">History</a></li>
+          <li id="nav-admin-link" class="hidden"><a href="admin.html">Admin Console</a></li>
+        </ul>
+      </nav>
+
+      <!-- User & Logout -->
+      <div class="header-user">
+        <span class="header-user__name" id="header-user-name" aria-label="Logged in user"></span>
+        <button
+          type="button"
+          class="btn-logout"
+          id="btn-logout"
+          aria-label="Logout of ParkWise"
+        >
+          Logout
+        </button>
+      </div>
+
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main id="main-content">
+    <div class="booking-container">
+
+      <!-- Location Missing / Error State -->
+      <div id="location-error-state" class="location-state-card" role="alert" hidden>
+        <span class="state-icon" aria-hidden="true">
+          <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
+            <line x1="12" y1="9" x2="12" y2="13"></line>
+            <line x1="12" y1="17" x2="12.01" y2="17"></line>
+          </svg>
+        </span>
+        <h2 id="location-error-title" class="state-title">Location Selection Required</h2>
+        <p id="location-error-desc" class="state-desc">
+          No parking location was specified. Please choose a parking facility from our locations directory to view available slots.
+        </p>
+        <div class="state-actions" style="margin-top: 16px;">
+          <a href="locations.html" class="btn btn-primary" id="btn-browse-locations">Browse Parking Locations</a>
+        </div>
+      </div>
+
+      <!-- Selected Location Header Bar -->
+      <div id="location-header-bar" class="location-header-bar" hidden>
+        <div class="location-header-content">
+          <div class="location-breadcrumb">
+            <a href="locations.html" class="btn-change-location" aria-label="Choose another parking location">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <line x1="19" y1="12" x2="5" y2="12"></line>
+                <polyline points="12 19 5 12 12 5"></polyline>
+              </svg>
+              <span>Choose another location</span>
+            </a>
+          </div>
+          <div class="location-meta-row">
+            <h1 id="selected-location-name" class="selected-location-title">Loading Facility…</h1>
+            <span id="selected-location-category" class="category-badge"></span>
+            <span id="selected-location-status" class="status-badge"></span>
+          </div>
+          <p id="selected-location-address" class="selected-location-address"></p>
+        </div>
+      </div>
+
+      <!-- Facility Closed Warning -->
+      <div id="location-closed-banner" class="status-alert status-alert--closed" role="alert" hidden style="margin-bottom: 20px;">
+        <svg class="alert-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
+          <line x1="12" y1="9" x2="12" y2="13"></line>
+          <line x1="12" y1="17" x2="12.01" y2="17"></line>
+        </svg>
+        <div class="status-alert__content">
+          <strong>Facility Temporarily Closed:</strong> This parking location is currently closed. Slot booking is unavailable.
+        </div>
+      </div>
+
+      <!-- Uncertain Submission Alert -->
+      <div id="uncertain-booking-alert" class="uncertain-banner" role="alert" aria-live="assertive" hidden>
+        <div class="uncertain-banner__icon" aria-hidden="true">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
+            <line x1="12" y1="9" x2="12" y2="13"></line>
+            <line x1="12" y1="17" x2="12.01" y2="17"></line>
+          </svg>
+        </div>
+        <div class="uncertain-banner__content">
+          <strong>Connection Disrupted — Booking Status Uncertain</strong>
+          <p id="uncertain-booking-message">
+            Your booking request may have already been processed and saved on the server. Do not create a new booking with different details. You can retry with the exact same request identifier or reconcile status.
+          </p>
+          <div class="uncertain-banner__actions">
+            <button type="button" id="btn-retry-uncertain" class="btn btn-warning btn-sm">
+              Retry Booking (Same Request ID)
+            </button>
+            <a id="btn-return-uncertain" class="btn btn-primary btn-sm" hidden>
+              Return to Facility
+            </a>
+            <button type="button" id="btn-discard-uncertain" class="btn btn-secondary btn-sm">
+              Discard Attempt
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Authoritative Booking Success Confirmation Card -->
+      <section id="booking-confirmation-container" class="booking-confirmation-card" aria-labelledby="confirmation-heading" hidden>
+        <div class="confirmation-header">
+          <span class="confirmation-icon" aria-hidden="true">
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+              <polyline points="22 4 12 14.01 9 11.01"></polyline>
+            </svg>
+          </span>
+          <h2 id="confirmation-heading">Booking Confirmed!</h2>
+          <span id="conf-idempotent-badge" class="badge-replayed" hidden>Replayed Confirmation</span>
+        </div>
+        <p class="confirmation-intro">
+          Your slot reservation is confirmed in the database.
+        </p>
+
+        <div class="confirmation-grid">
+          <div class="conf-item">
+            <span class="conf-label">Booking Reference</span>
+            <span class="conf-val" id="conf-booking-id">—</span>
+          </div>
+          <div class="conf-item">
+            <span class="conf-label">Facility &amp; Slot</span>
+            <span class="conf-val" id="conf-location-slot">—</span>
+          </div>
+          <div class="conf-item">
+            <span class="conf-label">Vehicle</span>
+            <span class="conf-val" id="conf-vehicle">—</span>
+          </div>
+          <div class="conf-item">
+            <span class="conf-label">Duration &amp; Schedule</span>
+            <span class="conf-val" id="conf-schedule">—</span>
+          </div>
+          <div class="conf-item conf-item--highlight">
+            <span class="conf-label">Authoritative Total Price</span>
+            <span class="conf-val conf-val--price" id="conf-total-price">₹0.00</span>
+          </div>
+          <div class="conf-item">
+            <span class="conf-label">Status</span>
+            <span class="conf-val" id="conf-status">Active</span>
+          </div>
+        </div>
+
+        <div class="confirmation-migration-note">
+          <span class="note-icon" aria-hidden="true">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <circle cx="12" cy="12" r="10"></circle>
+              <line x1="12" y1="16" x2="12" y2="12"></line>
+              <line x1="12" y1="8" x2="12.01" y2="8"></line>
+            </svg>
+          </span>
+          <div class="note-text">
+            <strong>Database Recorded:</strong> This booking has been committed directly to the backend database. Note: Dashboard and History views currently display local browser previews; account cloud history synchronization will be connected in an upcoming stage.
+          </div>
+        </div>
+
+        <div class="confirmation-actions">
+          <a href="locations.html" class="btn btn-primary">Find Another Location</a>
+          <button type="button" id="btn-book-another" class="btn btn-secondary">Book Another Slot Here</button>
+        </div>
+      </section>
+
+      <!-- Main Booking Workflow Container (Filters, Recommendations, Slot Map, and Booking Panel) -->
+      <div id="booking-workflow-container" class="booking-layout">
+
+        <!-- Main Column: Filters, Tabs, Recommendations, Grid -->
+        <div class="booking-main-col">
+
+          <!-- Filters Bar -->
+          <div
+            class="booking-filters"
+            role="search"
+            aria-label="Filter parking slots"
+          >
+
+            <div class="filter-group">
+              <label for="filter-vehicle-type">Vehicle Type</label>
+              <select id="filter-vehicle-type" name="filterVehicleType">
+                <option value="all">All Types</option>
+                <option value="car">Car</option>
+                <option value="bike">Bike / 2-Wheeler</option>
+                <option value="ev">Electric Vehicle (EV)</option>
+              </select>
+            </div>
+
+            <div class="filter-group">
+              <label for="filter-zone">Zone</label>
+              <select id="filter-zone" name="filterZone">
+                <option value="all">All Zones</option>
+              </select>
+            </div>
+
+            <div class="filter-group">
+              <label for="filter-floor">Floor</label>
+              <select id="filter-floor" name="filterFloor">
+                <option value="all">All Floors</option>
+              </select>
+            </div>
+
+            <button
+              type="button"
+              class="btn-filter-apply"
+              id="btn-apply-filters"
+              aria-label="Apply selected filters to the parking map"
+            >
+              Apply Filters
+            </button>
+
+          </div>
+
+          <!-- Dynamic Zone Tabs -->
+          <div
+            class="zone-tabs-wrapper"
+            role="group"
+            aria-label="Quick zone filter"
+          >
+            <span class="zone-tabs-label" aria-hidden="true">Zone:</span>
+            <div class="zone-tabs" id="zone-tabs-container">
+              <button
+                type="button"
+                class="zone-tab zone-tab--all"
+                id="tab-all"
+                aria-pressed="true"
+                data-zone="all"
+              >
+                All
+                <span class="zone-tab-count" id="tab-count-all" aria-label="available in all zones">0</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Rule-Based Recommendations Section -->
+          <section
+            class="recommendations-section"
+            id="recommendations-section"
+            aria-labelledby="recommendations-heading"
+          >
+
+            <div class="section-header">
+              <h2 id="recommendations-heading">Recommended Slots</h2>
+              <span class="ai-badge" aria-label="Rule-based slot ranking">Rule-Based</span>
+            </div>
+            <p class="section-subtitle">
+              Deterministic rule-based recommendations scored by vehicle compatibility, proximity to entry, and price.
+            </p>
+
+            <div
+              id="recommendations-grid"
+              class="recommendations-grid"
+              aria-live="polite"
+              aria-atomic="false"
+              aria-label="Rule-based recommended parking slots"
+            >
+              <!-- Default placeholder before vehicle type is selected -->
+              <div class="empty-state" id="recommendations-placeholder">
+                <p class="empty-state__icon" aria-hidden="true">
+                  <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+                  </svg>
+                </p>
+                <p class="empty-state__title">Select a vehicle type</p>
+                <p>Recommendations will appear based on vehicle compatibility, entrance distance, and hourly pricing.</p>
+              </div>
+            </div>
+
+          </section>
+
+          <!-- Parking Map (Slot Grid) -->
+          <section
+            class="slot-section"
+            aria-labelledby="slot-map-heading"
+          >
+
+            <div class="section-header">
+              <h2 id="slot-map-heading">Parking Map</h2>
+              <span
+                class="section-header__count"
+                id="slot-count"
+                aria-live="polite"
+                aria-label="Number of available slots"
+              >Loading…</span>
+            </div>
+
+            <div class="slot-grid-wrapper">
+
+              <!-- Empty Inventory Notice -->
+              <div id="slots-empty-state" class="empty-state" hidden>
+                <p class="empty-state__icon" aria-hidden="true">
+                  <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <rect x="3" y="3" width="18" height="18" rx="4"></rect>
+                    <path d="M9 17V7h4a3 3 0 0 1 0 6H9"></path>
+                  </svg>
+                </p>
+                <p class="empty-state__title">No Slots Available</p>
+                <p>No parking slots match the selected criteria for this location.</p>
+              </div>
+
+              <!-- Slot Grid -->
+              <div
+                id="slot-grid"
+                class="slot-grid"
+                role="list"
+                aria-label="Interactive parking slot map. Press Enter or Space to select a slot."
+                aria-live="polite"
+                aria-atomic="false"
+              >
+                <!-- Initial loading state -->
+                <div class="empty-state" id="slot-grid-loading">
+                  <div class="loading-spinner" role="status" aria-label="Loading parking slots"></div>
+                  <p>Loading parking map…</p>
+                </div>
+              </div>
+
+              <!-- Map Legend -->
+              <div class="slot-legend" role="list" aria-label="Parking slot status legend">
+
+                <div class="legend-item" role="listitem">
+                  <span class="legend-dot legend-dot--available" aria-hidden="true"></span>
+                  Available
+                </div>
+
+                <div class="legend-item" role="listitem">
+                  <span class="legend-dot legend-dot--occupied" aria-hidden="true"></span>
+                  Occupied
+                </div>
+
+                <div class="legend-item" role="listitem">
+                  <span class="legend-dot legend-dot--selected" aria-hidden="true"></span>
+                  Your Selection
+                </div>
+
+                <div class="legend-item" role="listitem">
+                  <span class="legend-dot legend-dot--reserved" aria-hidden="true"></span>
+                  Incompatible Type
+                </div>
+
+              </div>
+            </div>
+
+          </section>
+
+        </div>
+
+        <!-- Side Column: Sticky Booking Summary & Confirmation Controls -->
+        <div class="booking-side-col">
+
+          <!-- Booking Panel Overlay (Mobile Drawer Backdrop) -->
+          <div
+            class="booking-panel-overlay"
+            id="booking-panel-overlay"
+            aria-hidden="true"
+          ></div>
+
+          <!-- Booking Confirmation Panel -->
+          <aside
+            class="booking-panel"
+            id="booking-panel"
+            role="region"
+            aria-labelledby="booking-panel-title"
+            aria-hidden="true"
+          >
+
+            <!-- Empty prompt state when no slot selected (Desktop) -->
+            <div class="panel-empty-prompt" id="panel-empty-prompt">
+              <svg class="panel-empty-icon" width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <rect x="3" y="3" width="18" height="18" rx="4"></rect>
+                <path d="M9 17V7h4a3 3 0 0 1 0 6H9"></path>
+              </svg>
+              <h3 class="panel-empty-title">Select a Parking Slot</h3>
+              <p class="panel-empty-desc">
+                Choose an available slot from the map or recommended list to configure duration and complete your reservation.
+              </p>
+            </div>
+
+            <!-- Panel Header (Sticky in drawer / header of summary card) -->
+            <div class="booking-panel__header">
+              <h2 class="booking-panel__title" id="booking-panel-title">Confirm Booking</h2>
+              <button
+                type="button"
+                class="btn-close-panel"
+                id="btn-close-panel"
+                aria-label="Close booking panel"
+              >
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <line x1="18" y1="6" x2="6" y2="18"></line>
+                  <line x1="6" y1="6" x2="18" y2="18"></line>
+                </svg>
+              </button>
+            </div>
+
+            <!-- Panel Body -->
+            <div class="booking-panel__body">
+
+              <!-- Selected Slot Summary — populated by booking.js -->
+              <div class="panel-slot-summary" id="panel-slot-summary" aria-live="polite">
+                <p class="panel-slot-summary__id" id="panel-slot-id">—</p>
+                <p class="panel-slot-summary__zone" id="panel-slot-zone">—</p>
+                <div class="panel-slot-summary__details" id="panel-slot-details"></div>
+                <p class="panel-slot-summary__price" id="panel-slot-price">—</p>
+                <div class="panel-slot-features" id="panel-slot-features"></div>
+              </div>
+
+              <!-- Booking Form -->
+              <form
+                id="booking-form"
+                class="booking-form"
+                aria-label="Parking booking form"
+                novalidate
+              >
+
+                <!-- Saved Vehicle Selector (Stage 11B) -->
+                <div class="form-group" id="saved-vehicle-group">
+                  <label for="saved-vehicle-select">Choose a saved vehicle <span class="form-label-optional">(Optional)</span></label>
+                  <select id="saved-vehicle-select" name="savedVehicle" aria-describedby="saved-vehicle-help">
+                    <option value="">-- Manual Entry / Choose a vehicle --</option>
+                  </select>
+                  <p class="form-hint" id="saved-vehicle-help">Select to autofill vehicle number and type.</p>
+                </div>
+
+                <div class="form-group">
+                  <label for="vehicle-type">Vehicle Type</label>
+                  <select
+                    id="vehicle-type"
+                    name="vehicleType"
+                    required
+                    aria-describedby="vehicle-type-error"
+                    aria-required="true"
+                  >
+                    <option value="">Select vehicle type</option>
+                    <option value="car">Car</option>
+                    <option value="bike">Bike / 2-Wheeler</option>
+                    <option value="ev">Electric Vehicle (EV)</option>
+                  </select>
+                  <p
+                    class="form-error"
+                    id="vehicle-type-error"
+                    role="alert"
+                    aria-live="polite"
+                    hidden
+                  ></p>
+                </div>
+
+                <div class="form-group">
+                  <label for="vehicle-number">Vehicle Number</label>
+                  <input
+                    type="text"
+                    id="vehicle-number"
+                    name="vehicleNumber"
+                    placeholder="e.g. MH12AB1234"
+                    autocomplete="off"
+                    required
+                    maxlength="15"
+                    aria-describedby="vehicle-number-error"
+                    aria-required="true"
+                  >
+                  <p
+                    class="form-error"
+                    id="vehicle-number-error"
+                    role="alert"
+                    aria-live="polite"
+                    hidden
+                  ></p>
+                </div>
+
+                <div class="form-group">
+                  <label for="duration-hours">Duration</label>
+                  <select
+                    id="duration-hours"
+                    name="durationHours"
+                    required
+                    aria-describedby="duration-error"
+                    aria-required="true"
+                  >
+                    <option value="">Select duration</option>
+                    <option value="1">1 hour</option>
+                    <option value="2">2 hours</option>
+                    <option value="3">3 hours</option>
+                    <option value="4">4 hours</option>
+                    <option value="6">6 hours</option>
+                    <option value="8">8 hours</option>
+                    <option value="12">12 hours</option>
+                    <option value="24">24 hours (Full Day)</option>
+                  </select>
+                  <p
+                    class="form-error"
+                    id="duration-error"
+                    role="alert"
+                    aria-live="polite"
+                    hidden
+                  ></p>
+                </div>
+
+                <!-- Live Price Calculator -->
+                <div
+                  class="price-calculator"
+                  id="price-calculator"
+                  aria-live="polite"
+                  aria-label="Estimated total cost"
+                >
+                  <div>
+                    <p class="price-calculator__label">Estimated Total</p>
+                    <p class="price-calculator__breakdown" id="price-breakdown">
+                      Select duration to calculate
+                    </p>
+                  </div>
+                  <p class="price-calculator__total" id="price-total">₹0</p>
+                </div>
+                <p class="price-calculator__disclaimer">
+                  *Estimated total in INR based on duration and hourly rate. Authoritative total is verified and finalized by the server upon booking.
+                </p>
+                <p class="form-error is-visible" id="booking-form-error" role="alert" aria-live="assertive" hidden style="margin-top: 10px;"></p>
+
+              </form>
+
+              <!-- Panel Action Buttons -->
+              <div class="panel-actions">
+                <button
+                  type="submit"
+                  form="booking-form"
+                  class="btn-primary"
+                  id="btn-confirm-booking"
+                  aria-label="Confirm this parking slot booking"
+                >
+                  Confirm Booking
+                </button>
+
+                <button
+                  type="button"
+                  class="btn-secondary"
+                  id="btn-cancel-panel"
+                  aria-label="Cancel and close the booking panel"
+                >
+                  Cancel
+                </button>
+              </div>
+
+            </div>
+
+          </aside>
+
+        </div>
+
+      </div>
+
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer>
+    <div>
+      <p>&copy; 2026 ParkWise. All rights reserved.</p>
+    </div>
+  </footer>
+
+  <!-- Dependency order: storage → utils → api → validation → auth → page-specific -->
+  <script src="js/storage.js"    defer></script>
+  <script src="js/utils.js"      defer></script>
+  <script src="js/api.js"        defer></script>
+  <script src="js/validation.js" defer></script>
+  <script src="js/auth.js"       defer></script>
+  <script src="js/booking.js"    defer></script>
+
+</body>
+</html>
