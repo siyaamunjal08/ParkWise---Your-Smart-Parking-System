@@ -1,0 +1,616 @@
+/* ============================================================
+   ParkWise — Auth Stylesheet (Phase D Modernization)
+   Cohesive modern dark SaaS login & registration interface
+   ============================================================ */
+
+/* ── 1. Design System Tokens ───────────────────────────────── */
+:root {
+  --color-bg-base:        #0a0f1d;
+  --color-bg-surface:     #0f172a;
+  --color-bg-card:        #1e293b;
+  --color-bg-card-hover:  #243247;
+
+  --color-border:         rgba(148, 163, 184, 0.14);
+  --color-border-hover:   rgba(148, 163, 184, 0.28);
+  --color-border-focus:   #6366f1;
+
+  --color-primary:        #6366f1;
+  --color-primary-dark:   #4f46e5;
+  --color-primary-light:  rgba(99, 102, 241, 0.15);
+  --color-secondary:      #06b6d4;
+  --color-accent:         #8b5cf6;
+
+  --color-success:        #10b981;
+  --color-success-bg:     rgba(16, 185, 129, 0.12);
+  --color-success-border: rgba(16, 185, 129, 0.35);
+
+  --color-warning:        #f59e0b;
+  --color-warning-bg:     rgba(245, 158, 11, 0.12);
+  --color-warning-border: rgba(245, 158, 11, 0.35);
+
+  --color-error:          #ef4444;
+  --color-error-bg:       rgba(239, 68, 68, 0.12);
+  --color-error-border:   rgba(239, 68, 68, 0.35);
+
+  --color-text:           #f8fafc;
+  --color-text-muted:     #94a3b8;
+  --color-text-dark:      #cbd5e1;
+
+  --font-sans:            system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+
+  --radius-sm:            6px;
+  --radius-md:            10px;
+  --radius-lg:            14px;
+  --radius-full:          9999px;
+
+  --transition-fast:      0.15s ease;
+  --transition-base:      0.25s ease;
+
+  --header-height:        60px;
+  --container-max:        1200px;
+  --auth-form-max:        460px;
+}
+
+/* ── 2. Reset & Base ───────────────────────────────────────── */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin:     0;
+  padding:    0;
+}
+
+html {
+  scroll-behavior: smooth;
+  font-size: 16px;
+  color-scheme: dark;
+}
+
+body {
+  font-family: var(--font-sans);
+  color: var(--color-text);
+  background-color: var(--color-bg-base);
+  background-image:
+    radial-gradient(ellipse 80% 50% at 50% -20%, rgba(99, 102, 241, 0.12), transparent),
+    radial-gradient(ellipse 60% 40% at 90% 90%, rgba(6, 182, 212, 0.06), transparent);
+  background-attachment: fixed;
+  line-height: 1.5;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+  transition: color var(--transition-fast);
+}
+
+ul { list-style: none; }
+
+address { font-style: normal; }
+
+h1, h2, h3, h4 {
+  color: var(--color-text);
+  font-weight: 700;
+  line-height: 1.25;
+}
+
+h1 { font-size: clamp(1.5rem, 3vw, 1.85rem); }
+h2 { font-size: 1.15rem; }
+h3 { font-size: 0.95rem; }
+
+p {
+  color: var(--color-text-muted);
+}
+
+strong {
+  color: #ffffff;
+  font-weight: 700;
+}
+
+/* ── 3. Strict Hidden Utility ──────────────────────────────── */
+.hidden,
+[hidden] {
+  display: none !important;
+}
+
+/* ── 4. Site Header ────────────────────────────────────────── */
+.site-header,
+header {
+  position: sticky;
+  top: 0;
+  z-index: 200;
+  min-height: var(--header-height);
+  background: rgba(15, 23, 42, 0.92);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.header-inner,
+header > div {
+  max-width: var(--container-max);
+  margin-inline: auto;
+  padding: 0.75rem clamp(1rem, 4vw, 2rem);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+}
+
+.logo-link strong,
+header strong {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #ffffff;
+  letter-spacing: -0.01em;
+}
+
+nav ul,
+header nav ul {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+nav a,
+header nav a {
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: var(--color-text-dark);
+  padding: 0.35rem 0.5rem;
+  border-radius: var(--radius-sm);
+  transition: color var(--transition-fast), background var(--transition-fast);
+}
+
+nav a:hover,
+header nav a:hover {
+  color: #ffffff;
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.header-actions,
+header > div > div {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  flex-shrink: 0;
+}
+
+.btn-auth-nav,
+header > div > div a {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.4rem 1rem;
+  border-radius: var(--radius-md);
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  border: 1px solid var(--color-border);
+  background: transparent;
+  color: var(--color-text-dark);
+}
+
+.btn-auth-nav:hover,
+header > div > div a:hover {
+  background: rgba(255, 255, 255, 0.06);
+  color: #ffffff;
+}
+
+.btn-auth-nav[aria-current="page"],
+header > div > div a[aria-current="page"] {
+  background: var(--color-primary);
+  border-color: var(--color-primary);
+  color: #ffffff;
+  box-shadow: 0 2px 8px rgba(99, 102, 241, 0.35);
+}
+
+.btn-auth-nav[aria-current="page"]:hover,
+header > div > div a[aria-current="page"]:hover {
+  background: var(--color-primary-dark);
+}
+
+/* ── 5. Main Layout & Auth Section ─────────────────────────── */
+main {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: clamp(2rem, 4vw, 3.5rem) clamp(1rem, 4vw, 2rem);
+}
+
+#register,
+#login {
+  width: 100%;
+  max-width: var(--auth-form-max);
+  background: var(--color-bg-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  box-shadow: 0 16px 36px -8px rgba(0, 0, 0, 0.5);
+  padding: clamp(1.75rem, 4vw, 2.5rem);
+  position: relative;
+}
+
+.auth-card-header,
+#register > header,
+#login > header {
+  text-align: center;
+  margin-bottom: 1.75rem;
+  background: transparent;
+  border: none;
+  padding: 0;
+  min-height: unset;
+}
+
+.auth-card-header h1,
+#register > header h1,
+#login > header h1 {
+  font-size: clamp(1.4rem, 2.5vw, 1.75rem);
+  margin-bottom: 0.35rem;
+  color: var(--color-text);
+}
+
+.auth-card-header p,
+#register > header p,
+#login > header p {
+  font-size: 0.9rem;
+  color: var(--color-text-muted);
+}
+
+/* Notice Banner */
+.auth-notice {
+  margin-top: 0.85rem;
+  padding: 0.75rem 0.95rem;
+  background: rgba(99, 102, 241, 0.08);
+  border: 1px solid rgba(99, 102, 241, 0.22);
+  border-radius: var(--radius-sm);
+  font-size: 0.825rem;
+  color: #cbd5e1;
+  line-height: 1.45;
+  text-align: left;
+  display: flex;
+  align-items: flex-start;
+  gap: 0.55rem;
+}
+
+.notice-icon {
+  flex-shrink: 0;
+  color: #818cf8;
+  margin-top: 0.15rem;
+}
+
+/* ── 6. Form Layout & Controls ─────────────────────────────── */
+#register form,
+#login form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.15rem;
+}
+
+.form-group,
+#register form > div,
+#login form > div {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+#register form label,
+#login form label {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--color-text-dark);
+}
+
+#register form input,
+#login form input {
+  width: 100%;
+  height: 42px;
+  padding: 0 0.9rem;
+  font-family: inherit;
+  font-size: 0.9rem;
+  color: var(--color-text);
+  background: var(--color-bg-base);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  outline: none;
+  transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
+}
+
+#register form input::placeholder,
+#login form input::placeholder {
+  color: var(--color-text-muted);
+}
+
+#register form input:hover,
+#login form input:hover {
+  border-color: var(--color-border-hover);
+}
+
+#register form input:focus,
+#login form input:focus {
+  border-color: var(--color-border-focus);
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.2);
+}
+
+/* Auth Submit Button */
+.btn-auth-submit,
+#register form button[type="submit"],
+#login form button[type="submit"] {
+  width: 100%;
+  height: 44px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 1.5rem;
+  font-family: inherit;
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #ffffff;
+  background: var(--color-primary);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(99, 102, 241, 0.35);
+  transition: all var(--transition-fast);
+  margin-top: 0.25rem;
+}
+
+.btn-auth-submit:hover,
+#register form button[type="submit"]:hover,
+#login form button[type="submit"]:hover {
+  background: var(--color-primary-dark);
+  box-shadow: 0 4px 14px rgba(99, 102, 241, 0.45);
+  transform: translateY(-1px);
+}
+
+.btn-auth-submit:active,
+#register form button[type="submit"]:active,
+#login form button[type="submit"]:active {
+  transform: translateY(0);
+}
+
+.btn-auth-submit:focus-visible,
+#register form button[type="submit"]:focus-visible,
+#login form button[type="submit"]:focus-visible {
+  outline: 2px solid var(--color-secondary);
+  outline-offset: 2px;
+}
+
+.btn-auth-submit:disabled,
+#register form button[type="submit"]:disabled,
+#login form button[type="submit"]:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+/* Validation Errors */
+.form-error {
+  font-size: 0.8rem;
+  font-weight: 500;
+  color: #fca5a5;
+  margin-top: 0.2rem;
+}
+
+.input--error {
+  border-color: rgba(239, 68, 68, 0.65) !important;
+  box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.15) !important;
+}
+
+/* Login Auth-Level Error Banner */
+#login-error {
+  padding: 0.75rem 1rem;
+  background: var(--color-error-bg);
+  border: 1px solid var(--color-error-border);
+  border-radius: var(--radius-sm);
+  color: #fca5a5;
+  font-size: 0.85rem;
+  font-weight: 500;
+}
+
+/* Auth Switch Links */
+.auth-switch-text,
+#register > p,
+#login > p {
+  text-align: center;
+  margin-top: 1.5rem;
+  font-size: 0.875rem;
+  color: var(--color-text-muted);
+}
+
+.auth-switch-text a,
+#register > p a,
+#login > p a {
+  color: var(--color-secondary);
+  font-weight: 600;
+  margin-left: 0.25rem;
+}
+
+.auth-switch-text a:hover,
+#register > p a:hover,
+#login > p a:hover {
+  color: var(--color-primary);
+  text-decoration: underline;
+}
+
+/* ── 7. Page Footer ────────────────────────────────────────── */
+footer {
+  background: var(--color-bg-surface);
+  border-top: 1px solid var(--color-border);
+  padding: 2.5rem clamp(1rem, 4vw, 2rem) 1.25rem;
+}
+
+.footer-grid,
+footer > div:first-child {
+  max-width: var(--container-max);
+  margin-inline: auto;
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr 1.5fr;
+  gap: 2rem;
+  padding-bottom: 2rem;
+  border-bottom: 1px solid var(--color-border);
+}
+
+footer h3 {
+  color: var(--color-text);
+  font-size: 0.95rem;
+  margin-bottom: 1rem;
+}
+
+footer nav ul,
+footer > div:first-child > div ul {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+footer a {
+  color: var(--color-text-muted);
+  font-size: 0.875rem;
+  transition: color var(--transition-fast);
+}
+
+footer a:hover {
+  color: #ffffff;
+}
+
+footer address p {
+  font-size: 0.875rem;
+  color: var(--color-text-muted);
+  margin-bottom: 0.35rem;
+}
+
+.footer-bottom,
+footer > div:last-child {
+  max-width: var(--container-max);
+  margin-inline: auto;
+  padding-top: 1.25rem;
+  text-align: center;
+}
+
+.footer-bottom p,
+footer > div:last-child p {
+  font-size: 0.825rem;
+  color: var(--color-text-muted);
+}
+
+/* ── 8. Toast Notifications ───────────────────────────────── */
+#toast-container {
+  position: fixed;
+  bottom: 1.5rem;
+  right: 1.5rem;
+  z-index: 9999;
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+  pointer-events: none;
+}
+
+.toast {
+  min-width: 260px;
+  max-width: 360px;
+  padding: 0.85rem 1.25rem;
+  border-radius: var(--radius-md);
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #f1f5f9;
+  background: var(--color-bg-surface);
+  border: 1px solid var(--color-border);
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.5);
+  border-left: 4px solid transparent;
+  pointer-events: auto;
+  opacity: 0;
+  transform: translateX(20px);
+  transition: opacity 0.25s ease, transform 0.25s ease;
+}
+
+.toast--visible { opacity: 1; transform: translateX(0); }
+.toast--hiding  { opacity: 0; transform: translateX(20px); }
+.toast--success { background: #0f291e; border-color: var(--color-success); }
+.toast--error   { background: #2b1115; border-color: var(--color-error); }
+.toast--info    { background: #171b38; border-color: var(--color-primary); }
+.toast--warning { background: #2b2010; border-color: var(--color-warning); }
+
+/* ── 9. Responsive Breakpoints ─────────────────────────────── */
+@media (max-width: 1024px) {
+  .footer-grid,
+  footer > div:first-child {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 768px) {
+  header > div,
+  .header-inner {
+    padding-block: 0.75rem;
+  }
+
+  header nav,
+  nav {
+    order: 3;
+    width: 100%;
+  }
+
+  header nav ul,
+  nav ul {
+    justify-content: center;
+    gap: 1.25rem;
+    flex-wrap: wrap;
+  }
+
+  .header-actions,
+  header > div > div {
+    margin-left: auto;
+  }
+
+  main {
+    padding: 1.5rem 1rem;
+  }
+
+  #register,
+  #login {
+    padding: 1.5rem 1.25rem;
+  }
+
+  .footer-grid,
+  footer > div:first-child {
+    grid-template-columns: 1fr;
+    text-align: center;
+  }
+
+  footer nav ul,
+  footer > div:first-child > div ul {
+    align-items: center;
+  }
+
+  #toast-container {
+    bottom: 1rem;
+    right: 1rem;
+    left: 1rem;
+  }
+
+  .toast {
+    min-width: unset;
+    max-width: 100%;
+  }
+}
+
+/* ── 10. Reduced Motion Support ────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+
+  html {
+    scroll-behavior: auto;
+  }
+}
