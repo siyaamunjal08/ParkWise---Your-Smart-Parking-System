@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Your ParkWise dashboard — view active bookings, stats, and manage your reservations.">
+  <meta name="theme-color" content="#0a0f1d">
+  <meta name="robots" content="noindex, nofollow">
+  <title>Dashboard | ParkWise</title>
+
+  <link rel="stylesheet" href="css/dashboard.css">
+</head>
+<body>
+
+  <!-- Header -->
+  <header class="site-header">
+    <div class="header-inner">
+
+      <!-- Logo -->
+      <a href="dashboard.html" class="logo-link" aria-label="ParkWise — go to dashboard">
+        <strong>ParkWise</strong>
+      </a>
+
+      <!-- App Navigation -->
+      <nav aria-label="Main navigation">
+        <ul class="nav-links">
+          <li><a href="dashboard.html" aria-current="page" class="nav-active">Dashboard</a></li>
+          <li><a href="locations.html">Find Parking</a></li>
+          <li><a href="booking.html">Book a Slot</a></li>
+          <li><a href="history.html">History</a></li>
+          <li id="nav-admin-link" class="hidden"><a href="admin.html">Admin Console</a></li>
+        </ul>
+      </nav>
+
+      <!-- User info + Logout -->
+      <div class="header-user">
+        <span class="header-user__name" id="header-user-name" aria-label="Logged in user"></span>
+        <button
+          type="button"
+          class="btn-logout"
+          id="btn-logout"
+          aria-label="Logout of ParkWise"
+        >
+          Logout
+        </button>
+      </div>
+
+    </div>
+  </header>
+
+  <!-- Initial Authentication Gate -->
+  <div id="dashboard-initial-loading" class="auth-loading-gate" role="status" aria-live="polite">
+    <div class="loading-spinner-circle" aria-hidden="true"></div>
+    <p>Verifying session...</p>
+  </div>
+
+  <!-- Main Content -->
+  <main id="main-content" class="hidden">
+    <div class="dashboard-container">
+
+      <!-- Welcome Banner -->
+      <section aria-labelledby="welcome-heading">
+        <div class="welcome-banner">
+          <div class="welcome-banner__content">
+
+            <div class="welcome-banner__text">
+              <h1 id="welcome-heading">
+                Welcome back,
+                <span class="user-name" id="welcome-name">there</span>!
+              </h1>
+              <p>Manage your reservations, view live parking timers, and access quick actions.</p>
+              <p class="welcome-banner__meta" id="welcome-meta" aria-live="polite"></p>
+            </div>
+
+            <a href="booking.html" class="btn-primary" id="welcome-book-btn">
+              Book a Slot
+            </a>
+
+          </div>
+        </div>
+      </section>
+
+      <!-- Stats Grid -->
+      <section aria-label="Your parking statistics">
+        <div class="stats-grid" role="list">
+
+          <div class="stat-card stat-card--primary" role="listitem">
+            <p class="stat-card__label">Total Bookings</p>
+            <p
+              class="stat-card__value"
+              id="stat-total-bookings"
+              aria-live="polite"
+              aria-label="Total bookings"
+            >0</p>
+            <p class="stat-card__sub">All time</p>
+          </div>
+
+          <div class="stat-card stat-card--success" role="listitem">
+            <p class="stat-card__label">Active Now</p>
+            <p
+              class="stat-card__value"
+              id="stat-active-bookings"
+              aria-live="polite"
+              aria-label="Active bookings"
+            >0</p>
+            <p class="stat-card__sub">Currently parked</p>
+          </div>
+
+          <div class="stat-card stat-card--secondary" role="listitem">
+            <p class="stat-card__label">Completed</p>
+            <p
+              class="stat-card__value"
+              id="stat-completed-bookings"
+              aria-live="polite"
+              aria-label="Completed bookings"
+            >0</p>
+            <p class="stat-card__sub">Finished sessions</p>
+          </div>
+
+          <div class="stat-card stat-card--warning" role="listitem">
+            <p class="stat-card__label">Cancelled</p>
+            <p
+              class="stat-card__value"
+              id="stat-cancelled-bookings"
+              aria-live="polite"
+              aria-label="Cancelled bookings"
+            >0</p>
+            <p class="stat-card__sub">Past cancellations</p>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- Active Bookings -->
+      <section aria-labelledby="active-bookings-heading" class="active-bookings-section">
+
+        <div class="section-header">
+          <div class="section-header__title-group">
+            <h2 id="active-bookings-heading">Active Bookings</h2>
+            <span
+              class="section-header__count"
+              id="active-bookings-count"
+              aria-label="Number of active bookings"
+            >0</span>
+          </div>
+          <a href="history.html" class="btn-link">View all history →</a>
+        </div>
+
+        <!-- Active Bookings List Container -->
+        <div
+          id="active-bookings-list"
+          class="bookings-list"
+          aria-live="polite"
+          aria-atomic="false"
+          aria-label="Active bookings list"
+        >
+
+          <!-- Loading state -->
+          <div class="loading-state hidden" id="dashboard-loading" aria-live="polite">
+            <div class="loading-spinner" role="status" aria-label="Loading active bookings"></div>
+            <p>Loading active bookings…</p>
+          </div>
+
+          <!-- Error state -->
+          <div class="error-state hidden" id="dashboard-error" role="alert">
+            <div class="error-icon" aria-hidden="true">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
+            </div>
+            <p class="error-msg" id="dashboard-error-msg">Failed to load active bookings.</p>
+            <button type="button" class="btn-sm btn-retry" id="btn-retry-dashboard">Retry</button>
+          </div>
+
+          <!-- Default empty state -->
+          <div class="empty-state" id="no-bookings-msg">
+            <p class="empty-state__icon" aria-hidden="true">
+              <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <rect x="3" y="3" width="18" height="18" rx="4"></rect>
+                <path d="M9 17V7h4a3 3 0 0 1 0 6H9"></path>
+              </svg>
+            </p>
+            <h3 class="empty-state__title">No active bookings</h3>
+            <p>You don't have any active parking sessions right now.</p>
+            <a href="booking.html" class="btn-primary">Book a Slot</a>
+          </div>
+
+        </div>
+ 
+        <!-- Limited preview notice when active bookings exceed page limit -->
+        <div class="dashboard-preview-notice hidden" id="dashboard-preview-notice" role="status">
+          <span id="dashboard-preview-text">Showing latest active bookings.</span>
+          <a href="history.html?status=active" class="btn-link" id="dashboard-preview-link">View all active bookings in Booking History →</a>
+        </div>
+
+      </section>
+
+      <!-- My Vehicles Section (Stage 11B) -->
+      <section aria-labelledby="vehicles-heading" class="vehicles-section">
+
+        <div class="section-header">
+          <div class="section-header__title-group">
+            <h2 id="vehicles-heading">My Vehicles</h2>
+            <span
+              class="section-header__count"
+              id="vehicles-count"
+              aria-label="Number of saved vehicles"
+            >0</span>
+          </div>
+          <button type="button" class="btn-sm btn-primary" id="btn-add-vehicle">+ Add Vehicle</button>
+        </div>
+
+        <!-- Add / Edit Vehicle Modal -->
+        <div class="vehicle-modal-backdrop hidden" id="vehicle-modal" role="dialog" aria-modal="true" aria-labelledby="vehicle-modal-title">
+          <div class="vehicle-modal-content">
+            <div class="vehicle-modal-header">
+              <h3 id="vehicle-modal-title">Add Vehicle</h3>
+              <button type="button" class="btn-close-modal" id="btn-close-vehicle-modal" aria-label="Close vehicle modal">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+              </button>
+            </div>
+            <form id="vehicle-form" novalidate>
+              <input type="hidden" id="vehicle-edit-id" value="">
+              <div class="form-group">
+                <label for="vehicle-input-reg">Registration Number <span class="required-asterisk">*</span></label>
+                <input
+                  type="text"
+                  id="vehicle-input-reg"
+                  name="registrationNumber"
+                  placeholder="e.g. MH12AB1234"
+                  maxlength="20"
+                  required
+                  autocomplete="off"
+                >
+                <p class="form-error hidden" id="vehicle-reg-error" role="alert"></p>
+              </div>
+
+              <div class="form-group">
+                <label for="vehicle-input-type">Vehicle Type <span class="required-asterisk">*</span></label>
+                <select id="vehicle-input-type" name="type" required>
+                  <option value="car">Car</option>
+                  <option value="bike">Bike / 2-Wheeler</option>
+                  <option value="ev">Electric Vehicle (EV)</option>
+                </select>
+                <p class="form-error hidden" id="vehicle-type-error" role="alert"></p>
+              </div>
+
+              <div class="form-group">
+                <label for="vehicle-input-label">Nickname (Optional)</label>
+                <input
+                  type="text"
+                  id="vehicle-input-label"
+                  name="label"
+                  placeholder="e.g. My Daily Car, Dad's Scooter"
+                  maxlength="50"
+                  autocomplete="off"
+                >
+                <p class="form-error hidden" id="vehicle-label-error" role="alert"></p>
+              </div>
+
+              <div class="form-error-banner hidden" id="vehicle-form-error-banner" role="alert"></div>
+
+              <div class="modal-form-actions">
+                <button type="button" class="btn-secondary" id="btn-cancel-vehicle-modal">Cancel</button>
+                <button type="submit" class="btn-primary" id="btn-save-vehicle">Save Vehicle</button>
+              </div>
+            </form>
+          </div>
+        </div>
+
+        <!-- Vehicles List Container -->
+        <div
+          id="vehicles-list"
+          class="vehicles-list"
+          aria-live="polite"
+          aria-atomic="false"
+          aria-label="Saved vehicles list"
+        >
+
+          <!-- Loading state -->
+          <div class="loading-state hidden" id="vehicles-loading" aria-live="polite">
+            <div class="loading-spinner" role="status" aria-label="Loading your vehicles"></div>
+            <p>Loading your vehicles…</p>
+          </div>
+
+          <!-- Error state -->
+          <div class="error-state hidden" id="vehicles-error" role="alert">
+            <div class="error-icon" aria-hidden="true">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
+            </div>
+            <p class="error-msg" id="vehicles-error-msg">Failed to load vehicles.</p>
+            <button type="button" class="btn-sm btn-retry" id="btn-retry-vehicles">Retry</button>
+          </div>
+
+          <!-- Empty state -->
+          <div class="empty-state" id="no-vehicles-msg">
+            <p class="empty-state__icon" aria-hidden="true">
+              <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <rect x="3" y="11" width="18" height="8" rx="2"></rect>
+                <path d="M5 11l2-5h10l2 5"></path>
+                <circle cx="7.5" cy="15.5" r="1.5"></circle>
+                <circle cx="16.5" cy="15.5" r="1.5"></circle>
+              </svg>
+            </p>
+            <h3 class="empty-state__title">No saved vehicles</h3>
+            <p>Save your vehicles for fast one-click booking autofill.</p>
+            <button type="button" class="btn-primary" id="btn-add-vehicle-empty">+ Add Vehicle</button>
+          </div>
+
+        </div>
+
+      </section>
+
+      <!-- Quick Actions -->
+      <section aria-labelledby="quick-actions-heading" class="quick-actions-section">
+
+        <div class="section-header">
+          <h2 id="quick-actions-heading">Quick Actions</h2>
+        </div>
+
+        <div class="quick-actions">
+
+          <a href="booking.html" class="action-card" id="action-book">
+            <div class="action-card__icon action-card__icon--primary" aria-hidden="true">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <rect x="3" y="3" width="18" height="18" rx="4"></rect>
+                <path d="M9 17V7h4a3 3 0 0 1 0 6H9"></path>
+              </svg>
+            </div>
+            <p class="action-card__title">Book a Slot</p>
+            <p class="action-card__desc">
+              Find and reserve an available parking slot using AI recommendations.
+            </p>
+          </a>
+
+          <a href="history.html" class="action-card" id="action-history">
+            <div class="action-card__icon action-card__icon--secondary" aria-hidden="true">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                <polyline points="14 2 14 8 20 8"></polyline>
+                <line x1="16" y1="13" x2="8" y2="13"></line>
+                <line x1="16" y1="17" x2="8" y2="17"></line>
+                <polyline points="10 9 9 9 8 9"></polyline>
+              </svg>
+            </div>
+            <p class="action-card__title">Booking History</p>
+            <p class="action-card__desc">
+              View, search, and filter all your past and current bookings.
+            </p>
+          </a>
+
+        </div>
+
+      </section>
+
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer>
+    <div>
+      <p>&copy; 2026 ParkWise. All rights reserved.</p>
+    </div>
+  </footer>
+
+  <!-- Dependency order: storage → utils → api → validation → auth → page-specific -->
+  <script src="js/storage.js" defer></script>
+  <script src="js/utils.js" defer></script>
+  <script src="js/api.js" defer></script>
+  <script src="js/validation.js" defer></script>
+  <script src="js/auth.js" defer></script>
+  <script src="js/dashboard.js" defer></script>
+
+</body>
+</html>
